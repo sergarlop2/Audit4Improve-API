@@ -245,7 +245,7 @@ public class Context {
 	 * 
 	 * @return la fuente para las métricas
 	 */
-	public static Font getMetricFont() {
+	public Font getMetricFont() {
 		Font font = null;
 		// TO DO
 		return font;
@@ -265,7 +265,7 @@ public class Context {
 	 * @throws IOException problema al leer el fichero
 	 */
 
-	public static Font getIndicatorFont(IndicatorI.IndicatorState state) throws IOException {
+	public Font getIndicatorFont(IndicatorI.IndicatorState state) throws IOException {
 		Font font = null;
 
 		// TO DO

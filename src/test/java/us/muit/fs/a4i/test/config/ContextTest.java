@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.awt.Font;
+import us.muit.fs.a4i.model.entities.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import us.muit.fs.a4i.config.Context;
+import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
 
 /**
  * @author Isabel Román
@@ -229,7 +230,29 @@ class ContextTest {
 	 */
 	@Test
 	void testGetIndicatorFont() {
-		fail("Not yet implemented");
+		try {
+			Font font = null;
+			
+			// Se le solicita la fuente del estado indefinido, que tendrá los valores por defecto al no estar 
+			// definidas sus propiedades en el fichero de configuración utilizados en los tests.
+			font = Context.getContext().getIndicatorFont(IndicatorState.UNDEFINED);
+			assertNotNull(font, "No se ha inicializado bien la fuente");
+			// El nombre o tipo de la fuente podrá ser Arial o Times según el momento en el que se realicen los tests.
+			assertTrue("Arial".equals(font.getName()) || "Times".equals(font.getName()),
+					"No es el tipo de fuente especificado en el fichero de propiedades");
+			
+			// Se le solicita al contexto la fuente del estao "CRITICAL", cuyas propiedades están definidas en el 
+			// fichero de configuración utilizado en los tests.
+			font = Context.getContext().getIndicatorFont(IndicatorState.CRITICAL);
+			assertNotNull(font, "No se ha inicializado bien la fuente");
+			assertTrue("Verdana".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
+			assertTrue("Blue".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
+			assertTrue(20 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+			
+			} catch (IOException e) {
+				fail("No debería devolver esta excepción");
+				e.printStackTrace();
+			}
 	}
 
 	/**
