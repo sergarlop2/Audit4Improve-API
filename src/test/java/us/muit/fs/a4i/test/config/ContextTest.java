@@ -35,6 +35,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import us.muit.fs.a4i.model.entities.IndicatorI;
+import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
