@@ -242,7 +242,7 @@ class ContextTest {
 					"No es el tipo de fuente especificado en el fichero de propiedades");
 			
 			// Se le solicita al contexto la fuente del estao "CRITICAL", cuyas propiedades están definidas en el 
-			// fichero de configuración utilizado en los tests.
+			// fichero de configuración por defecto.
 			font = Context.getContext().getIndicatorFont(IndicatorState.CRITICAL);
 			assertNotNull(font, "No se ha inicializado bien la fuente");
 			assertTrue("Verdana".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
