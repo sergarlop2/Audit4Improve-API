@@ -4,12 +4,13 @@
 package us.muit.fs.a4i.test.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import us.muit.fs.a4i.model.entities.Font;
+import us.muit.fs.a4i.model.entities.Font; // Clase que sustituye a java.awt.Font
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,22 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import us.muit.fs.a4i.config.Context;
-import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import us.muit.fs.a4i.model.entities.IndicatorI;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * @author Isabel Román
@@ -199,7 +215,7 @@ class ContextTest {
 	void testGetDefaultFont() {
 		try {
 			Font font = null;
-			String color;
+			String color; // No entiendo cómo usarlo, ¿para darle valor luego?//
 			// Uso esto para ver los tipos de fuentes de los que dispongo
 			//String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 			//log.info("listado de fuentes " + Arrays.toString(fontNames));
@@ -207,8 +223,9 @@ class ContextTest {
 			assertNotNull(font, "No se ha inicializado bien la fuente");
 			//Al ser Context un singleton una vez creada la instancia no se puede eliminar "desde fuera"
 			//De manera que el valor de la fuente depende del orden en el que se ejecuten los test, y para que el test sea independiente de eso la verificación comprueba los dos posibles valores
+			assertTrue("Black".equals(font.getColor()) || "Red".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
+			assertTrue(12 == font.getSize() || 16 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
 			assertTrue("Arial".equals(font.getName()) || "Times".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
-			
 
 		} catch (IOException e) {
 			fail("No debería devolver esta excepción");
@@ -218,10 +235,25 @@ class ContextTest {
 
 	/**
 	 * Test method for {@link us.muit.fs.a4i.config.Context#getMetricFont()}.
+	 * @throws IOException 
 	 */
 	@Test
-	void testGetMetricFont() {
-		fail("Not yet implemented");
+	
+	void testGetMetricFont(){
+		try {
+		//fail("Not yet implemented");
+		Font font = null;
+		String color; // No entiendo cómo usarlo, ¿para darle valor luego?//
+		font = Context.getContext().getMetricFont();
+		assertNotNull(font, "No se ha inicializado bien la fuente");
+		assertTrue("Green".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
+		assertTrue(15 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+		assertTrue("Serif".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
+		
+	}catch (IOException e) {
+		fail("No debería devolver esta excepción");
+		e.printStackTrace();
+		}	
 	}
 
 	/**

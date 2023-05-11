@@ -3,7 +3,7 @@
  */
 package us.muit.fs.a4i.config;
 
-import java.awt.Font;
+/**import java.awt.Font;**/
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import us.muit.fs.a4i.model.entities.IndicatorI;
+import us.muit.fs.a4i.model.entities.Font;
 
 /**
  * <p>
@@ -214,20 +215,21 @@ public class Context {
 	 * @return La fuente por defecto para indicadores y métricas
 	 */
 	public Font getDefaultFont() {
-		// OJO el color no forma parte de la clase font, por loq ue ese atributo debe
+		// OJO el color no forma parte de la clase font, por lo que ese atributo debe
 		// estar fuera
 		// Podría incluir un parámetro font para devolverlo a la salida y que lo que
 		// devuelva sea un String con el color
 		log.info("Busca la información de configuración de la fuente, por defecto");
 
 		// TO DO
-		String color = properties.getProperty("Font.default.color");
+		String color  = properties.getProperty("Font.default.color");
 		String height = properties.getProperty("Font.default.height");
-		String type = properties.getProperty("Font.default.type");
+		String type   = properties.getProperty("Font.default.type");
 		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
 		log.info("Intento crear la fuente");
 
 		return new Font(type, Font.ITALIC, Integer.valueOf(height));
+		
 	}
 
 	/**
@@ -266,9 +268,29 @@ public class Context {
 	 */
 
 	public Font getIndicatorFont(IndicatorI.IndicatorState state) throws IOException {
+		/**He eliminado el static, así si funciona
+		 * Hay que comprobar si el static estaba puesto con sentido desde un primer momento
+		 * **/
 		Font font = null;
-
-		// TO DO
+		// TODO:
+		String propiedad = "Font." + state.toString();
+		
+		String color  = properties.getProperty(propiedad + ".color");
+		String height = properties.getProperty(propiedad + ".height");
+		String type   = properties.getProperty(propiedad + ".type");
+		
+		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
+		log.info("Intento crear la fuente");
+		
+		if (color == null) {
+			color  = properties.getProperty("Font.default.color");	
+		} else if (height == null) {
+			height = properties.getProperty("Font.default.height");
+		} else {
+			type   = properties.getProperty("Font.default.type");	
+		}
+		
+		font = new Font(type, Integer.valueOf(height), color);
 		return font;
 	}
 
