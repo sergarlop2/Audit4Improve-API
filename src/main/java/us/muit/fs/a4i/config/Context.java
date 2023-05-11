@@ -228,7 +228,7 @@ public class Context {
 		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
 		log.info("Intento crear la fuente");
 
-		return new Font(type, Font.ITALIC, Integer.valueOf(height));
+		return new Font(type,Integer.valueOf(height),color);
 		
 	}
 
@@ -248,9 +248,31 @@ public class Context {
 	 * @return la fuente para las métricas
 	 */
 	public Font getMetricFont() {
-		Font font = null;
-		// TO DO
-		return font;
+		log.info("Busca la información de configuración de la fuente, para las métricas");
+
+		String type = properties.getProperty("Font.metric.type");
+		String height = properties.getProperty("Font.metric.height");
+		String color = properties.getProperty("Font.metric.color");
+
+		if (type==null){
+			type = properties.getProperty("Font.default.type");
+			log.info("El tipo de la fuente de las metricas es el valor por defecto");
+		}
+		if (height==null){
+			height = properties.getProperty("Font.default.height");
+			log.info("El tamaño de la fuente de las metricas es el valor por defecto");
+		}
+		if (color==null){
+			color = properties.getProperty("Font.default.color");
+			log.info("El color de la fuente de las metricas es el valor por defecto");
+		}
+
+		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
+	
+		log.info("Intento crear la fuente");
+	
+		return new Font(type, Integer.valueOf(height), color);
+
 	}
 
 	/**
@@ -287,6 +309,8 @@ public class Context {
 		} 
 		if (height == null) {
 			height = properties.getProperty("Font.default.height");
+		}
+		if (type == null){
 		} 
 		if(type == null){
 			type   = properties.getProperty("Font.default.type");	
