@@ -284,9 +284,11 @@ public class Context {
 		
 		if (color == null) {
 			color  = properties.getProperty("Font.default.color");	
-		} else if (height == null) {
+		} 
+		if (height == null) {
 			height = properties.getProperty("Font.default.height");
-		} else {
+		} 
+		if(type == null){
 			type   = properties.getProperty("Font.default.type");	
 		}
 		
