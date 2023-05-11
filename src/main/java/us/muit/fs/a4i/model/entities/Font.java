@@ -12,5 +12,4 @@ public class Font extends java.awt.Font{
 	public String getColor(){
 		return this.color;
 	}
-	
 }
