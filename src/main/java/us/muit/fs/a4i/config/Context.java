@@ -311,6 +311,8 @@ public class Context {
 			height = properties.getProperty("Font.default.height");
 		}
 		if (type == null){
+		} 
+		if(type == null){
 			type   = properties.getProperty("Font.default.type");	
 		}
 		
