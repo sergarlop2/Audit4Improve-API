@@ -35,31 +35,32 @@ public class RepositoryCalculator implements IndicatorsCalculator {
 	public void calcIndicator(String indicatorName, ReportManagerI reportManager) throws IndicatorException {
 		log.info("Calcula el indicador de nombre " + indicatorName);
 		/**
-		 * Tiene que mirar si están ya las métricas que necesita Si están lo calcula
-		 * Si no están busca las métricas, las añade al informe y lo calcula
+		 * Tiene que mirar si están ya las métricas que necesita Si están lo calcula Si
+		 * no están busca las métricas, las añade al informe y lo calcula
 		 * 
 		 */
 		IndicatorStrategy indicatorStrategy = strategies.get(indicatorName);
 		List<String> requiredMetrics = indicatorStrategy.requiredMetrics();
-		log.info("Las m�tricas necesarias son: " + requiredMetrics.toString());
+		log.info("Las m�tricas necesarias son: " + requiredMetrics.toString());
 		List<ReportItemI> metrics = reportManager.getReport().getAllMetrics().stream().collect(Collectors.toList());
 		List<String> metricsName = metrics.stream().map(ReportItemI::getName).collect(Collectors.toList());
 		if (metricsName.containsAll(requiredMetrics)) {
 			try {
-				indicatorStrategy.calcIndicator(metrics);
+				// ¡¡Faltaba añadir el indicador al informe!!
+				reportManager.getReport().addIndicator(indicatorStrategy.calcIndicator(metrics));
+				log.info("Añadido al informe indicador");
 			} catch (NotAvailableMetricException e) {
 				log.info("No se han proporcionado las m�tricas necesarias");
 				e.printStackTrace();
 			}
-		} else {
+		} else {			
 			log.info("No se han proporcionado las metricas necesarias");
 		}
 	}
 
 	/**
 	 * Calcula todos los indicadores definidos para un repositorio Recupera todas
-	 * las métricas que necesite y que no estén en el informe y las añade al
-	 * mismo
+	 * las métricas que necesite y que no estén en el informe y las añade al mismo
 	 * 
 	 */
 	@Override

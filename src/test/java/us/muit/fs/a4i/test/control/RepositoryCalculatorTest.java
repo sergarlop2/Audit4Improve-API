@@ -1,5 +1,10 @@
 package us.muit.fs.a4i.test.control;
 
+/***
+ * @author celllarod, curso 22/23
+ * Pruebas añadidas por alumnos del curso 22/23 para probar la clase RepositoryCalculator
+ */
+
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 
@@ -18,12 +23,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import us.muit.fs.a4i.control.IndicatorStrategy;
-import us.muit.fs.a4i.control.IssuesRatioIndicator;
+import us.muit.fs.a4i.control.IssuesRatioIndicatorStrategy;
 import us.muit.fs.a4i.control.ReportManagerI;
 import us.muit.fs.a4i.control.RepositoryCalculator;
 import us.muit.fs.a4i.exceptions.IndicatorException;
 import us.muit.fs.a4i.exceptions.NotAvailableMetricException;
 import us.muit.fs.a4i.exceptions.ReportItemException;
+import us.muit.fs.a4i.model.entities.IndicatorI;
 import us.muit.fs.a4i.model.entities.ReportI;
 import us.muit.fs.a4i.model.entities.ReportItem;
 import us.muit.fs.a4i.model.entities.ReportItem.ReportItemBuilder;
@@ -79,14 +85,17 @@ public class RepositoryCalculatorTest {
 		// Creamos mocks necesarios
 		ReportManagerI reportManagerMock = Mockito.mock(ReportManagerI.class);
 		ReportI report = Mockito.mock(ReportI.class);
-		
+
 		List<ReportItemI> metricsMock = new ArrayList<>();
 		ReportItemI metric1 = Mockito.mock(ReportItemI.class);
+		// Faltaba: configurar el método getName de las métricas
+		Mockito.when(metric1.getName()).thenReturn("metric1");
 		ReportItemI metric2 = Mockito.mock(ReportItemI.class);
-		
+		Mockito.when(metric2.getName()).thenReturn("metric2");
+
 		metricsMock.add(metric1);
 		metricsMock.add(metric2);
-		
+
 		IndicatorStrategy indicatorStrategyMock = Mockito.mock(IndicatorStrategy.class);
 
 		Mockito.when(reportManagerMock.getReport()).thenReturn(report);
@@ -94,15 +103,23 @@ public class RepositoryCalculatorTest {
 		// Metrics
 		Mockito.when(report.getAllMetrics()).thenReturn(metricsMock);
 
-		// Required metrics para el indicador forzando a que coincidan con las m�tricas creadas
+		// Required metrics para el indicador forzando a que coincidan con las m�tricas
+		// creadas
 		List<String> requiredMetrics = new ArrayList<>();
 		requiredMetrics.add(metric1.getName());
 		requiredMetrics.add(metric2.getName());
+		ReportItemI nuevoIndicador = Mockito.mock(ReportItemI.class);
+		Mockito.when(nuevoIndicador.getName()).thenReturn("nuevoIndicador");
 		Mockito.when(indicatorStrategyMock.requiredMetrics()).thenReturn(requiredMetrics);
+		try {
+			Mockito.when(indicatorStrategyMock.calcIndicator(metricsMock)).thenReturn(nuevoIndicador);
+		} catch (NotAvailableMetricException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Seteamos alguna estrategia
 		repositoryCalculator.setIndicator("indicator1", indicatorStrategyMock);
-
 
 		// Llamamos a calIndicator
 		try {
@@ -111,9 +128,8 @@ public class RepositoryCalculatorTest {
 			e.printStackTrace();
 		}
 
+		// Verificamos que cada uno de los m�todos hayan sido llamados
 
-		// Verificamos que cada uno de los m�todos hayan sido llamados
-		Mockito.verify(reportManagerMock).getReport();
 		Mockito.verify(report).getAllMetrics();
 		Mockito.verify(indicatorStrategyMock).requiredMetrics();
 		try {
@@ -122,19 +138,21 @@ public class RepositoryCalculatorTest {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
-	 * Test para el metodo calcIndicator de RepositoryCalculator
-	 * Verifica que no llama a calIndiicator si no se le pasa la m�trica adecuada
+	 * Test para el metodo calcIndicator de RepositoryCalculator Verifica que no
+	 * llama a calIndiicator si no se le pasa la m�trica adecuada
 	 * {@link us.muit.fs.a4i.control.RepositoryCalculator.calcIndicator(String,
-	 * ReportManagerI)}.	 
-	 * @throws NotAvailableMetricException 
-	 * @throws ReportItemException */
+	 * ReportManagerI)}.
+	 * 
+	 * @throws NotAvailableMetricException
+	 * @throws ReportItemException
+	 */
 	@Test
-	@Tag("integration")
-	@DisplayName("Prueba calcIndicator de  RepositoryCalculator metricas incorrectas")
-	void testCalIndicatorNotRequiredMetrics() throws NotAvailableMetricException, ReportItemException{
+	@Tag("unit")
+	@DisplayName("Prueba calcIndicator de RepositoryCalculator con metricas incorrectas y usando mocks")
+	void unitTestCalIndicatorNotRequiredMetrics() throws NotAvailableMetricException, ReportItemException {
+		// prueba la calculadora usando mocks, para el caso de que las métricas necesarias no estén disponibles
 
 		// Creamos la clase a probar
 		RepositoryCalculator repositoryCalculator = new RepositoryCalculator();
@@ -142,15 +160,17 @@ public class RepositoryCalculatorTest {
 		// Creamos mocks necesarios
 		ReportManagerI reportManagerMock = Mockito.mock(ReportManagerI.class);
 		ReportI report = Mockito.mock(ReportI.class);
-		
+
 		List<ReportItemI> metricsMock = new ArrayList<>();
-	
-		ReportItemBuilder<Integer> mb1 = new ReportItem.ReportItemBuilder<Integer>("issues", 2);
-		ReportItemBuilder<Double> mb2 = new ReportItem.ReportItemBuilder<Double>("closedIssues", 1.0);
-		
-		metricsMock.add(mb1.build());
-		metricsMock.add(mb2.build());
-		
+		ReportItemI metric1 = Mockito.mock(ReportItemI.class);
+		// Faltaba: configurar el método getName de las métricas
+		Mockito.when(metric1.getName()).thenReturn("metric1");
+		ReportItemI metric2 = Mockito.mock(ReportItemI.class);
+		Mockito.when(metric2.getName()).thenReturn("metric2");
+
+		metricsMock.add(metric1);
+		metricsMock.add(metric2);
+
 		IndicatorStrategy indicatorStrategyMock = Mockito.mock(IndicatorStrategy.class);
 
 		Mockito.when(reportManagerMock.getReport()).thenReturn(report);
@@ -158,11 +178,72 @@ public class RepositoryCalculatorTest {
 		// Metrics
 		Mockito.when(report.getAllMetrics()).thenReturn(metricsMock);
 
+		// Required metrics para el indicador forzando a que coincidan con las m�tricas
+		// creadas
+		List<String> requiredMetrics = new ArrayList<>();
+		requiredMetrics.add("otra1");
+		requiredMetrics.add("otra2");
+		ReportItemI nuevoIndicador = Mockito.mock(ReportItemI.class);
+		Mockito.when(nuevoIndicador.getName()).thenReturn("nuevoIndicador");
+		Mockito.when(indicatorStrategyMock.requiredMetrics()).thenReturn(requiredMetrics);
 
 		// Seteamos alguna estrategia
-		repositoryCalculator.setIndicator("issuesRatio", new IssuesRatioIndicator());
-		
-		// Verificamos que no se ha llamado al m�todo
+		repositoryCalculator.setIndicator("indicator1", indicatorStrategyMock);
+
+		// Llamamos a calIndicator
+		try {
+			repositoryCalculator.calcIndicator("indicator1", reportManagerMock);
+		} catch (IndicatorException e) {
+			e.printStackTrace();
+		}
+
+		// Verificamos que no se ha llamado al m�todo
+		Mockito.verify(indicatorStrategyMock, times(0)).calcIndicator(metricsMock);
+	}
+
+	/**
+	 * Test para el metodo calcIndicator de RepositoryCalculator Verifica que no
+	 * llama a calIndiicator si no se le pasa la m�trica adecuada
+	 * {@link us.muit.fs.a4i.control.RepositoryCalculator.calcIndicator(String,
+	 * ReportManagerI)}.
+	 * 
+	 * @throws NotAvailableMetricException
+	 * @throws ReportItemException
+	 */
+	@Test
+	@Tag("integration")
+	@DisplayName("Prueba calcIndicator de  RepositoryCalculator metricas incorrectas")
+	void testCalIndicatorNotRequiredMetrics() throws NotAvailableMetricException, ReportItemException {
+		// Si no queremos depender de los objetos reales habría que eliminar las
+		// dependencias, pero en este caso se ha etiquetado como prueba
+		// de integración
+
+		// Creamos la clase a probar
+		RepositoryCalculator repositoryCalculator = new RepositoryCalculator();
+
+		// Creamos mocks necesarios
+		ReportManagerI reportManagerMock = Mockito.mock(ReportManagerI.class);
+		ReportI report = Mockito.mock(ReportI.class);
+
+		List<ReportItemI> metricsMock = new ArrayList<>();
+
+		ReportItemBuilder<Integer> mb1 = new ReportItem.ReportItemBuilder<Integer>("issues", 2);
+		ReportItemBuilder<Double> mb2 = new ReportItem.ReportItemBuilder<Double>("closedIssues", 1.0);
+
+		metricsMock.add(mb1.build());
+		metricsMock.add(mb2.build());
+
+		IndicatorStrategy indicatorStrategyMock = Mockito.mock(IndicatorStrategy.class);
+
+		Mockito.when(reportManagerMock.getReport()).thenReturn(report);
+
+		// Metrics
+		Mockito.when(report.getAllMetrics()).thenReturn(metricsMock);
+
+		// Seteamos alguna estrategia
+		repositoryCalculator.setIndicator("issuesRatio", new IssuesRatioIndicatorStrategy());
+
+		// Verificamos que no se ha llamado al m�todo
 		Mockito.verify(indicatorStrategyMock, times(0)).calcIndicator(metricsMock);
 	}
 

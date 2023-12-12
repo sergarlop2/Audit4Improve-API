@@ -3,7 +3,7 @@ package us.muit.fs.a4i.exceptions;
 public class NotAvailableMetricException extends Exception{
 	
 	/**
-	 * Excepcion que ocurre cuando se quiere calcular un indicador pero no se proporcionan las métricas adecuadas.
+	 * Excepcion que ocurre cuando se quiere calcular un indicador pero no se proporcionan las mï¿½tricas adecuadas.
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -19,7 +19,7 @@ public class NotAvailableMetricException extends Exception{
 	 * @param info Mensaje definiendo el error
 	 */
 	public NotAvailableMetricException(String info) {
-		message = info;
+		message = "No se dispone de las mÃ©tricas necesiarias " + info;
 	}
 
 	@Override

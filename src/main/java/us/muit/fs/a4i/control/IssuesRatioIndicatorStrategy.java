@@ -12,7 +12,7 @@ import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
 import us.muit.fs.a4i.model.entities.ReportItem;
 import us.muit.fs.a4i.model.entities.ReportItemI;
 
-public class IssuesRatioIndicator implements IndicatorStrategy<Double> {
+public class IssuesRatioIndicatorStrategy implements IndicatorStrategy<Double> {
 
 	private static Logger log = Logger.getLogger(Indicator.class.getName());
 
@@ -28,9 +28,13 @@ public class IssuesRatioIndicator implements IndicatorStrategy<Double> {
 		ReportItemI<Double> indicatorReport = null;
 
 		if (openIssues.isPresent() && closedIssues.isPresent()) {
+			Double issuesRatio;
 
 			// Se realiza el c�lculo del indicador
-			Double issuesRatio = openIssues.get().getValue()/closedIssues.get().getValue();
+			if(closedIssues.get().getValue()!=0) 
+				issuesRatio = openIssues.get().getValue()/closedIssues.get().getValue();
+			else
+				issuesRatio = openIssues.get().getValue();
 
 			try {
 				// Se crea el indicador
@@ -44,7 +48,7 @@ public class IssuesRatioIndicator implements IndicatorStrategy<Double> {
 
 		} else {
 			log.info("No se han proporcionado las m�tricas necesarias");
-			throw new NotAvailableMetricException("No se han proporcionado las metricas necesarias");
+			throw new NotAvailableMetricException(REQUIRED_METRICS.toString());
 		}
 
 		return  indicatorReport;

@@ -124,6 +124,7 @@ dependencies {
 	testImplementation(platform('org.junit:junit-bom:5.8.2'))
 	//JAVADOC: https://www.javadoc.io/doc/org.junit.jupiter/junit-jupiter-api/latest/index.html
 	testImplementation('org.junit.jupiter:junit-jupiter')
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 }
 

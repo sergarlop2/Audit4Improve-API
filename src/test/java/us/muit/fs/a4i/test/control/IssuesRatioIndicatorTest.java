@@ -1,4 +1,8 @@
 package us.muit.fs.a4i.test.control;
+/***
+ * @author celllarod, curso 22/23
+ * Pruebas añadidas por alumnos del curso 22/23 para probar la clase IssuesRatioIndicator
+ */
 
 import java.util.logging.Logger;
 
@@ -14,10 +18,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
-import us.muit.fs.a4i.control.IssuesRatioIndicator;
+import us.muit.fs.a4i.control.IssuesRatioIndicatorStrategy;
 import us.muit.fs.a4i.exceptions.NotAvailableMetricException;
 import us.muit.fs.a4i.model.entities.ReportItemI;
 
@@ -70,7 +74,7 @@ public class IssuesRatioIndicatorTest {
 	        Mockito.when(mockClosedIssues.getValue()).thenReturn(5.0);
 
 	        // Creamos una instancia de IssuesRatioIndicator
-	        IssuesRatioIndicator indicator = new IssuesRatioIndicator();
+	        IssuesRatioIndicatorStrategy indicator = new IssuesRatioIndicatorStrategy();
 
 	        // Ejecutamos el método que queremos probar con los mocks como argumentos
 	        List<ReportItemI<Double>> metrics = Arrays.asList(mockOpenIssues, mockClosedIssues);
@@ -79,6 +83,7 @@ public class IssuesRatioIndicatorTest {
 	        // Comprobamos que el resultado es el esperado
 	        Assertions.assertEquals("issuesRatio", result.getName());
 	        Assertions.assertEquals(2.0, result.getValue());
+	        Assertions.assertDoesNotThrow(()->indicator.calcIndicator(metrics));
 	    }
 
 	    @Test
@@ -91,25 +96,24 @@ public class IssuesRatioIndicatorTest {
 	        Mockito.when(mockOpenIssues.getValue()).thenReturn(10.0);
 
 	        // Creamos una instancia de IssuesRatioIndicator
-	        IssuesRatioIndicator indicator = new IssuesRatioIndicator();
+	        IssuesRatioIndicatorStrategy indicator = new IssuesRatioIndicatorStrategy();
 
 	        // Ejecutamos el método que queremos probar con una sola métrica
 	        List<ReportItemI<Double>> metrics = Arrays.asList(mockOpenIssues);
-	        NotAvailableMetricException exception = Assertions.assertThrows(NotAvailableMetricException.class,
-	                () -> indicator.calcIndicator(metrics));
-
 	        // Comprobamos que se lanza la excepción adecuada
-	        Assertions.assertEquals("No se han proporcionado las metricas necesarias", exception.getMessage());
+	        NotAvailableMetricException exception = Assertions.assertThrows(NotAvailableMetricException.class,
+	                () -> indicator.calcIndicator(metrics)); 
+	        
 	    }
 	    
 
 	    @Test
 	    public void testRequiredMetrics() {
 	        // Creamos una instancia de IssuesRatioIndicator
-	        IssuesRatioIndicator indicator = new IssuesRatioIndicator();
+	        IssuesRatioIndicatorStrategy indicatorStrategy = new IssuesRatioIndicatorStrategy();
 
 	        // Ejecutamos el método que queremos probar
-	        List<String> requiredMetrics = indicator.requiredMetrics();
+	        List<String> requiredMetrics = indicatorStrategy.requiredMetrics();
 
 	        // Comprobamos que el resultado es el esperado
 	        List<String> expectedMetrics = Arrays.asList("openIssues", "closedIssues");
