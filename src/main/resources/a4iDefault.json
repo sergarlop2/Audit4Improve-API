@@ -40,6 +40,18 @@
 			"type": "java.util.Date",
 			"description": "Último push realizado en el repositorio",
 			"unit": "date"
+		},
+		{
+			"name": "openIssues",
+			"type": "java.lang.Double",
+			"description": "Numero de issues abiertas",
+			"unit": "issues"
+		},
+		{
+			"name": "closedIssues",
+			"type": "java.lang.Double",
+			"description": "Numero de issues cerradas",
+			"unit": "issues"
 		}
 	],
 	"indicators": [{
@@ -52,6 +64,12 @@
 			"name": "overdued",
 			"type": "java.lang.Double",
 			"description": "Ratio de issues vencidos frente a abiertos",
+			"unit": "ratio"
+		},
+		{
+			"name": "issuesRatio",
+			"type": "java.lang.Double",
+			"description": "Ratio de issues abiertos frente a cerrados",
 			"unit": "ratio"
 		}
 	]

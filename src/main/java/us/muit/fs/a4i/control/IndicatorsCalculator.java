@@ -5,6 +5,7 @@ package us.muit.fs.a4i.control;
 
 import us.muit.fs.a4i.exceptions.IndicatorException;
 import us.muit.fs.a4i.model.entities.ReportI;
+import us.muit.fs.a4i.control.IndicatorStrategy;
 
 /**
  * 
@@ -53,4 +54,6 @@ public interface IndicatorsCalculator {
 	 * @return El tipo de informes
 	 */
 	public ReportI.ReportType getReportType();
+	
+	public void setIndicator(String indicatorName, IndicatorStrategy strategy);
 }
