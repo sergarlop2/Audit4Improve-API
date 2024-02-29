@@ -36,7 +36,12 @@ public class ReportFormater implements ReportFormaterI {
 	@Override
 	public Font getMetricFont() {
 		if (metricFont == null) {
-			metricFont = Context.getMetricFont();
+			try {
+				metricFont = Context.getContext().getMetricFont();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return metricFont;
 	}
@@ -51,7 +56,7 @@ public class ReportFormater implements ReportFormaterI {
 	public Font getIndicatorFont(IndicatorI.IndicatorState state) throws IOException {
 		if (!indicatorsFont.containsKey(state)) {
 			try {
-				indicatorsFont.put(state, Context.getIndicatorFont(state));
+				indicatorsFont.put(state, Context.getContext().getIndicatorFont(state));
 			} catch (IOException e) {
 				indicatorsFont.put(state, Context.getContext().getDefaultFont());
 			}
