@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import us.muit.fs.a4i.model.entities.Font; // Clase que sustituye a java.awt.Font
+
+import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
@@ -225,9 +227,9 @@ class ContextTest {
 			assertNotNull(font, "No se ha inicializado bien la fuente");
 			//Al ser Context un singleton una vez creada la instancia no se puede eliminar "desde fuera"
 			//De manera que el valor de la fuente depende del orden en el que se ejecuten los test, y para que el test sea independiente de eso la verificación comprueba los dos posibles valores
-			assertTrue("Black".equals(font.getColor()) || "Red".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
-			assertTrue(12 == font.getSize() || 16 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
-			assertTrue("Arial".equals(font.getName()) || "Times".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
+			assertEquals(Color.BLACK.toString(),font.getColor().toString(),"No es el color de fuente especificado en el fichero de propiedades");
+			assertEquals(12,font.getFont().getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+			assertEquals("Arial",font.getFont().getFamily(),"No es el tipo de fuente especificado en el fichero de propiedades");
 
 		} catch (IOException e) {
 			fail("No debería devolver esta excepción");
@@ -245,12 +247,13 @@ class ContextTest {
 		try {
 		//fail("Not yet implemented");
 		Font font = null;
-		String color; // No entiendo cómo usarlo, ¿para darle valor luego?//
+		
 		font = Context.getContext().getMetricFont();
 		assertNotNull(font, "No se ha inicializado bien la fuente");
-		assertTrue("Green".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
-		assertTrue(15 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
-		assertTrue("Serif".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
+		assertEquals(Color.GREEN.toString(),font.getColor().toString(),"No es el color de fuente especificado en el fichero de propiedades");
+		assertTrue(15 == font.getFont().getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+		assertEquals(java.awt.Font.SERIF,font.getFont().getFamily(),"No es el tipo de fuente especificado en el fichero de propiedades");
+
 		
 	}catch (IOException e) {
 		fail("No debería devolver esta excepción");
@@ -272,16 +275,16 @@ class ContextTest {
 			font = Context.getContext().getIndicatorFont(IndicatorState.UNDEFINED);
 			assertNotNull(font, "No se ha inicializado bien la fuente");
 			// El nombre o tipo de la fuente podrá ser Arial o Times según el momento en el que se realicen los tests.
-			assertTrue("Arial".equals(font.getName()) || "Times".equals(font.getName()),
+			assertTrue("Arial".equals(font.getFont().getFamily()) || "Times".equals(font.getFont().getFamily()),
 					"No es el tipo de fuente especificado en el fichero de propiedades");
 			
 			// Se le solicita al contexto la fuente del estao "CRITICAL", cuyas propiedades están definidas en el 
 			// fichero de configuración por defecto.
 			font = Context.getContext().getIndicatorFont(IndicatorState.CRITICAL);
 			assertNotNull(font, "No se ha inicializado bien la fuente");
-			assertTrue("Verdana".equals(font.getName()),"No es el tipo de fuente especificado en el fichero de propiedades");
-			assertTrue("Blue".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
-			assertTrue(20 == font.getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+			assertTrue("Verdana".equals(font.getFont().getFamily()),"No es el tipo de fuente especificado en el fichero de propiedades");
+			assertTrue("RED".equals(font.getColor()),"No es el color de fuente especificado en el fichero de propiedades");
+			assertTrue(20 == font.getFont().getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
 			
 			} catch (IOException e) {
 				fail("No debería devolver esta excepción");
