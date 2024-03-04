@@ -3,6 +3,7 @@
  */
 package us.muit.fs.a4i.config;
 
+import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -209,7 +210,7 @@ public class Context {
 
 	/**
 	 * <p>
-	 * No Implementado Debería leer las propiedades adecuadas, como color, tamaño,
+	 * Lee las propiedades adecuadas, como color, tamaño,
 	 * tipo... y construir un objeto Font Si no se ha establecido un valor por
 	 * defecto se crea una fuente simple
 	 * </p>
@@ -223,24 +224,43 @@ public class Context {
 		// devuelva sea un String con el color
 		log.info("Busca la información de configuración de la fuente, por defecto");
 
-		// TO DO
-		String color  = properties.getProperty("Font.default.color");
-		String height = properties.getProperty("Font.default.height");
-		String type   = properties.getProperty("Font.default.type");
+	
+		String color  = getDefaultParam("color");
+		String height = getDefaultParam("height");
+		String type   = getDefaultParam("type");	
+
 		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
 		log.info("Intento crear la fuente");
 
 		return new Font(type,Integer.valueOf(height),color);
 		
 	}
+	private String getDefaultParam(String param) {
+		String property="Font.default."+param;		
+		String value=properties.getProperty(property);
+		/**
+		 * Se asegura de que se da un valor por defecto, aunque no esté configurado en el fichero
+		 */
+		if (value==null) {
+			switch(param) {
+			case "type":
+				value="Arial";
+				break;
+			case "color":
+				value="black";
+				break;
+			case "height":
+				value="12";
+				break;
+			}
+		}
+		return value;
+	}
 
 	/**
 	 * <p>
-	 * No Implementado
-	 * </p>
-	 * <p>
-	 * Deberá leer las propiedades adecuadas, como color, tamaño, tipo... y
-	 * construir un objeto Font
+	 * Lee las propiedades adecuadas, como color, tamaño, tipo... y
+	 * construye un objeto Font para la fuente de las métricas
 	 * </p>
 	 * <p>
 	 * Si no se ha definido una fuente para las métricas se debe devolver la fuente
@@ -257,15 +277,15 @@ public class Context {
 		String color = properties.getProperty("Font.metric.color");
 
 		if (type==null){
-			type = properties.getProperty("Font.default.type");
+			type = getDefaultParam("type");
 			log.info("El tipo de la fuente de las metricas es el valor por defecto");
 		}
 		if (height==null){
-			height = properties.getProperty("Font.default.height");
+			height =getDefaultParam("height");
 			log.info("El tamaño de la fuente de las metricas es el valor por defecto");
 		}
 		if (color==null){
-			color = properties.getProperty("Font.default.color");
+			color = getDefaultParam("color");
 			log.info("El color de la fuente de las metricas es el valor por defecto");
 		}
 
@@ -278,7 +298,7 @@ public class Context {
 	/**
 	 * <p>
 	 * Deberá leer las propiedades adecuadas, como color, tamaño, tipo... y
-	 * construir un objeto Font
+	 * construir un objeto Font para la fuente del indicador en dicho estado
 	 * </p>
 	 * 
 	 * @param state Estado para el que se solicita el color de fuente
