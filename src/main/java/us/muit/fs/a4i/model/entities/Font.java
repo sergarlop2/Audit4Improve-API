@@ -2,7 +2,6 @@ package us.muit.fs.a4i.model.entities;
 import java.awt.Color;
 import java.util.logging.Logger;
 
-import us.muit.fs.a4i.config.Context;
 
 public class Font {
 	private static Logger log = Logger.getLogger(Font.class.getName());

@@ -4,13 +4,14 @@
 package us.muit.fs.a4i.model.entities;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
  * @author Isabel Román
  *
  */
-public class Indicator implements IndicatorI {
+public class Indicator implements IndicatorI{
 	private static Logger log = Logger.getLogger(Indicator.class.getName());
 	private Collection<ReportItemI> metrics;
 	private IndicatorState state;

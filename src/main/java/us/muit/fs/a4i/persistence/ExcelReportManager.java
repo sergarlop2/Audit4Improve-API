@@ -13,16 +13,32 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
+
+/**
+ * import org.apache.poi.hssf.usermodel.HSSFSheet;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFWorkbookFactory;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
+ */
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+
+import org.apache.poi.xssf.usermodel.XSSFColor;
+
+import org.apache.poi.ss.usermodel.CellStyle;
+
+
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 
 import us.muit.fs.a4i.exceptions.ReportNotDefinedException;
 import us.muit.fs.a4i.model.entities.ReportI;
 import us.muit.fs.a4i.model.entities.ReportItemI;
+import us.muit.fs.a4i.model.entities.Font;
 
 /**
  * <p>
@@ -53,6 +69,7 @@ import us.muit.fs.a4i.model.entities.ReportItemI;
  */
 public class ExcelReportManager implements PersistenceManager, FileManager {
 	private static Logger log = Logger.getLogger(ExcelReportManager.class.getName());
+	private static int fontIndex=0;
 	/**
 	 * <p>
 	 * Referencia al gestor de estilo que se va a utilizar
@@ -75,8 +92,8 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 	 */
 	protected String fileName = "";
 
-	protected HSSFWorkbook wb = null;
-	protected HSSFSheet sheet = null;
+	protected XSSFWorkbook wb = null;
+	protected XSSFSheet sheet = null;
 
 	public ExcelReportManager(String filePath, String fileName) {
 		super();
@@ -121,11 +138,14 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 	 * @throws IOException                error al abrir el fichero
 	 * @throws EncryptedDocumentException documento protegido
 	 */
-	protected HSSFSheet getCleanSheet(String entityId) throws EncryptedDocumentException, IOException {
+	protected XSSFSheet getCleanSheet(String entityId) throws EncryptedDocumentException, IOException {
 		log.info("Solicita una hoja nueva del libro manejado, para la entidad con id: "+entityId);
 		if (wb == null) {
-			inputStream = new FileInputStream(filePath + fileName + ".xls");
-			wb = (HSSFWorkbook) WorkbookFactory.create(inputStream);
+			inputStream = new FileInputStream(filePath + fileName);
+		//	wb = (HSSFWorkbook) HSSWorkbookFactory.create(inputStream);
+			//XSSFWorkbookFactory factory=new SSSFWorkbookFactory();
+			
+			wb = new XSSFWorkbook(inputStream);
 			log.info("Generado workbook");
 
 		}
@@ -188,6 +208,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 			Collection<ReportItemI> collection = report.getAllMetrics();
 			for (ReportItemI metric : collection) {
 				persistMetric(metric);
+				rowIndex++;
 			}
 			//Ahora irían los indicadores
 			rowIndex++;
@@ -195,9 +216,10 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 			collection = report.getAllIndicators();
 			for (ReportItemI indicator : collection) {
 				persistIndicator(indicator);
+				rowIndex++;
 			}
             
-			out = new FileOutputStream(filePath + fileName + ".xls");
+			out = new FileOutputStream(filePath + "NEW"+fileName);
 			wb.write(out);
 			out.close();
 		} catch (Exception e) {
@@ -218,7 +240,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 		// docs sacados de aquí https://www.javatpoint.com/apache-poi-excel-font
 		// https://www.e-iceblue.com/Tutorials/Java/Spire.XLS-for-Java/Program-Guide/Cells/Apply-Fonts-in-Excel-in-Java.html
 
-		CellStyle style = wb.createCellStyle();
+		//CellStyle style = wb.createCellStyle();
 		//style.setFont((Font) formater.getMetricFont());
 
 		row.createCell(cellIndex++).setCellValue(metric.getName());
@@ -232,6 +254,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 	}
 
 	private void persistIndicator(ReportItemI indicator) {
+	
 		log.info("Introduzco indicador en la hoja");
         //Mantengo uno diferente porque en el futuro la información del indicador será distinta a la de la métrica
 		int rowIndex = sheet.getLastRowNum();
@@ -242,28 +265,68 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 
 		// Aquí debería indicar el formato de fuente en las celdas, que dependerá del
 		// estado del índice
-
-		CellStyle style = wb.createCellStyle();
-
+     //   CellStyle estilo=wb.getCellStyleAt((short) 1);
+     
+		//CellStyle style = wb.createCellStyle();
+		
+	/*
+		style.cloneStyleFrom(estilo);
+		if(style.equals(estilo) && (style.getIndex()!=estilo.getIndex())) {
+			log.info("Los estilos son iguales pero no son el mismo");
+		}else
+		{
+			log.info("Esto no va bien");
+		}
+*/
 		try {
-			style.setFont((Font) formater.getIndicatorFont(indicator.getIndicator().getState()));
+			CellStyle style = wb.createCellStyle();
+			XSSFFont poiFont = wb.createFont();		
+			
+			Font a4iFont=formater.getIndicatorFont(indicator.getIndicator().getState());
+			//Establezco el color y la fuente a utilizar en el texto de los indicadores.
+			
+		//	HSSFPalette palette = wb.getCustomPalette();
+			// get the color which most closely matches the color you want to use
+			//HSSFColor myColor = palette.findSimilarColor(a4iFont.getColor().getRed(), a4iFont.getColor().getGreen(), a4iFont.getColor().getBlue());
+			// get the palette index of that color 
+			//HSSFColor myColor=new HSSFColor(0,0,a4iFont.getColor());
+			byte[] color= {(byte) a4iFont.getColor().getRed(),(byte) a4iFont.getColor().getGreen(),(byte) a4iFont.getColor().getBlue()};
+			XSSFColor myColor=new XSSFColor(color);
+			log.info("El nuevo color es "+myColor.getARGBHex());
+			//short palIndex = myColor.getIndex();
+			
+			poiFont.setFontHeight((short)a4iFont.getFont().getSize());
+			poiFont.setFontName(a4iFont.getFont().getFamily());
+			poiFont.setColor(myColor.getIndexed());	
+			log.info("La nueva fuente poi es "+poiFont.toString());
+			
+			//style.setFillBackgroundColor(a4iFont.getColor().toString());					
+			style.setFont(poiFont);
+			//style.setFillBackgroundColor(myColor.getIndexed());
+			log.info("Creado el estilo con indice "+style.getIndex());
+			row.createCell(cellIndex++).setCellValue(indicator.getName());
+			row.createCell(cellIndex++).setCellValue(indicator.getValue().toString());
+			row.createCell(cellIndex++).setCellValue(indicator.getUnit());
+			row.createCell(cellIndex++).setCellValue(indicator.getDescription());
+			
+			row.createCell(cellIndex).setCellStyle(style);
+			//row.createCell(cellIndex).getCellStyle().cloneStyleFrom(style);
+			//row.getCell(cellIndex).getCellStyle().cloneStyleFrom(style);
+			log.info("Establecido el estilo con indice "+style.getIndex()+" en la celda "+cellIndex);
+			row.createCell(cellIndex++).setCellValue(indicator.getIndicator().getState().toString());
+
+			row.createCell(cellIndex++).setCellValue(indicator.getSource());
+
+			row.createCell(cellIndex).setCellValue(indicator.getDate().toString());
+
+			log.info("Indice de celda final " + cellIndex);			
+			
 		} catch (IOException e) {
 			log.warning("Problema al abrir el fichero con los formatos");
 			e.printStackTrace();
 		}
 
-		row.createCell(cellIndex++).setCellValue(indicator.getName());
-		row.createCell(cellIndex++).setCellValue(indicator.getValue().toString());
-		row.createCell(cellIndex++).setCellValue(indicator.getUnit());
-		row.createCell(cellIndex++).setCellValue(indicator.getDescription());
-
-		row.createCell(cellIndex++).setCellValue(indicator.getIndicator().getState().toString());
-
-		row.createCell(cellIndex++).setCellValue(indicator.getSource());
-
-		row.createCell(cellIndex).setCellValue(indicator.getDate().toString());
-
-		log.info("Indice de celda final " + cellIndex);
+		
 
 	}
 

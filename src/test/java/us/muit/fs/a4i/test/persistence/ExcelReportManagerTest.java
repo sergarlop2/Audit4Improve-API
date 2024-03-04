@@ -3,7 +3,7 @@
  * Test para probar la clase ExcelReportManager
  * </p>
  * 
- * @author Iv�n Matas Gonz�lez
+ * @author Ivan Matas
  *
  */
 package us.muit.fs.a4i.test.persistence;
@@ -24,10 +24,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import us.muit.fs.a4i.exceptions.ReportNotDefinedException;
+import us.muit.fs.a4i.model.entities.Indicator;
+import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
 import us.muit.fs.a4i.model.entities.ReportI;
 import us.muit.fs.a4i.model.entities.ReportItem;
 import us.muit.fs.a4i.model.entities.ReportItemI;
 import us.muit.fs.a4i.persistence.ExcelReportManager;
+import us.muit.fs.a4i.persistence.ReportFormater;
 import us.muit.fs.a4i.persistence.ReportFormaterI;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +51,14 @@ class ExcelReportManagerTest {
 	private static ReportItem<String> metricStrMock = Mockito.mock(ReportItem.class);
 	@Mock(serializable = true)
 	private static ReportI informe = Mockito.mock(ReportI.class);
+	
+	@Mock(serializable = true)
+	private static ReportItem<Integer> itemIndicatorIntMock = Mockito.mock(ReportItem.class);
+	
+	@Mock(serializable=true)
+	private static Indicator indicatorIntMock = Mockito.mock(Indicator.class);
+	
+	
 	private static String excelPath;
 	private static String excelName;
 	private static ExcelReportManager underTest;
@@ -61,30 +72,44 @@ class ExcelReportManagerTest {
 		
 	}
 	
+	
 	@Test
 	void ExcelCreation() {
-		List<ReportItemI> lista=new ArrayList<ReportItemI>();
+		List<ReportItemI> listaMetric=new ArrayList<ReportItemI>();
+		List<ReportItemI> listaInd=new ArrayList<ReportItemI>();
 		Date fecha=new Date();
 		Mockito.when(metricIntMock.getValue()).thenReturn(55);
 		Mockito.when(metricIntMock.getName()).thenReturn("downloads");
 		Mockito.when(metricIntMock.getUnit()).thenReturn("downloads");
 		Mockito.when(metricIntMock.getDescription()).thenReturn("Descargas realizadas");		
 		Mockito.when(metricIntMock.getDate()).thenReturn(fecha);		
-		lista.add(metricIntMock);
+		listaMetric.add(metricIntMock);
 		
 		Mockito.when(metricStrMock.getValue()).thenReturn("2-2-22");
 		Mockito.when(metricStrMock.getName()).thenReturn("lastPush");
 		Mockito.when(metricStrMock.getUnit()).thenReturn("date");
 		Mockito.when(metricStrMock.getDescription()).thenReturn("Último push realizado en el repositorio");		
 		Mockito.when(metricStrMock.getDate()).thenReturn(fecha);	
-		lista.add(metricStrMock);
+		listaMetric.add(metricStrMock);
+		
+		Mockito.when(itemIndicatorIntMock.getValue()).thenReturn(22);
+		Mockito.when(itemIndicatorIntMock.getName()).thenReturn("otracosa");
+		Mockito.when(itemIndicatorIntMock.getUnit()).thenReturn("cosas");
+		Mockito.when(itemIndicatorIntMock.getDescription()).thenReturn("MetricaEjemplo");		
+		Mockito.when(itemIndicatorIntMock.getDate()).thenReturn(fecha);	
+		Mockito.when(indicatorIntMock.getState()).thenReturn(IndicatorState.CRITICAL);
+		Mockito.when(itemIndicatorIntMock.getIndicator()).thenReturn(indicatorIntMock);
+		listaInd.add(itemIndicatorIntMock);
 				
-		Mockito.when(informe.getAllMetrics()).thenReturn(lista);
+		Mockito.when(informe.getAllMetrics()).thenReturn(listaMetric);
+		Mockito.when(informe.getAllIndicators()).thenReturn(listaInd);
 		Mockito.when(informe.getEntityId()).thenReturn("entidadTest");
 		
 		excelPath = new String("src" + File.separator + "test" + File.separator + "resources"+File.separator);
-		excelName= new String("excelTest");
+		excelName= new String("excelTest.xlsx");
 		underTest=new ExcelReportManager(excelPath,excelName);	
+	
+		underTest.setFormater(new ReportFormater());
 		try {
 			log.info("El informe tiene el id "+informe.getEntityId());
 			underTest.saveReport(informe);
