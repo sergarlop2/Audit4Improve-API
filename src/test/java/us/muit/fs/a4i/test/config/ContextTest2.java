@@ -1,5 +1,6 @@
 /**
- * Tests para ContextTest sin modificar los ficheros de ocnfiguraicón pro defecto en ningún momento
+ * Separo los tests de Context en dos, para evitar el problema con el singleton:
+ * Si se modifican los ficheros de configuración los resultados son distintos, porque el orden de ejecución de los tests es aleatorio
  */
 package us.muit.fs.a4i.test.config;
 
@@ -10,30 +11,48 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import us.muit.fs.a4i.model.entities.Font; // Clase que sustituye a java.awt.Font
+
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import us.muit.fs.a4i.config.Context;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
 
+import us.muit.fs.a4i.model.entities.IndicatorI;
 import us.muit.fs.a4i.model.entities.IndicatorI.IndicatorState;
-import us.muit.fs.a4i.model.entities.Font; // Clase que sustituye a java.awt.Font
 
-
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * @author Isabel Román
  *
  */
-class ContextTest {
+class ContextTest2 {
 	private static Logger log = Logger.getLogger(CheckerTest.class.getName());
 	/**
 	 * Ruta al fichero de configuración de indicadores y métricas establecidos por
@@ -94,6 +113,57 @@ class ContextTest {
 		}
 
 	}
+
+	/**
+	 * Test method for
+	 * {@link us.muit.fs.a4i.config.Context#setAppRI(java.lang.String)}.
+	 */
+	@Test
+	@Tag("Integracion")
+	void testSetAppRI() {
+		/**
+		 * Este test excede los límites, ya que no sólo verifica que se establece bien
+		 * la ruta del fichero de especificación de métricas e indicadores sino que se
+		 * leen bien los valores del mismo Sería un test de integración porque se
+		 * requiere que estén ya desarrollados otras clases, a parte de Context
+		 */
+		try {
+			Context.setAppRI(appConfPath);
+			HashMap<String, String> metricInfo = Context.getContext().getChecker().getMetricConfiguration()
+					.getMetricInfo("downloads");
+			assertNotNull(metricInfo, "No se han leído los atributos de la métrica");
+			assertEquals("downloads", metricInfo.get("name"), "El nombre no es el correcto");
+			assertEquals("java.lang.Integer", metricInfo.get("type"), "El tipo no es el correcto");
+			assertEquals("Descargas realizadas", metricInfo.get("description"), "La descripción no es el correcta");
+			assertEquals("downloads", metricInfo.get("unit"), "Las uniddes no son correctas");
+
+		} catch (IOException e) {
+			fail("No se encuentra el fichero de especificación de métricas e indicadores");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link us.muit.fs.a4i.config.Context#setAppConf(java.lang.String)}.
+	 */
+	@Test
+	@Tag("Integracion")
+	void testSetAppConf() {
+		
+		try {
+
+			Context.setAppConf(appPath);
+			assertTrue(appPath.equals(Context.getAppConf()),"No coincide la ruta del fichero de métricas con la configurada");
+
+		} catch (IOException e) {
+			fail("No se encuentra el fichero de especificación de métricas e indicadores");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Test method for {@link us.muit.fs.a4i.config.Context#getChecker()}.
 	 */
@@ -197,26 +267,19 @@ class ContextTest {
 		try {
 			Font font = null;
 			
-			// Se le solicita la fuente del estado indefinido, que tendrá los valores por defecto Font.Default.xxx al no estar 
+			// Se le solicita la fuente del estado indefinido, que tendrá los valores por defecto al no estar 
 			// definidas sus propiedades en el fichero de configuración utilizados en los tests.
 			font = Context.getContext().getIndicatorFont(IndicatorState.UNDEFINED);
 			assertNotNull(font, "No se ha inicializado bien la fuente");
 			// El nombre o tipo de la fuente podrá ser Arial o Times según el momento en el que se realicen los tests.
-			assertEquals("Arial",font.getFont().getFamily(),"No es el tipo de fuente especificado en el fichero de propiedades");		
-			assertEquals(Color.BLACK,font.getColor(),"No es el color de fuente especificado en el fichero de propiedades");
-			assertEquals(12,font.getFont().getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
+			assertEquals("Arial",font.getFont().getFamily(),"No es el tipo de fuente especificado en el fichero de propiedades");
 			
 			// Se le solicita al contexto la fuente del estao "CRITICAL", cuyas propiedades están definidas en el 
 			// fichero de configuración por defecto.
 			font = Context.getContext().getIndicatorFont(IndicatorState.CRITICAL);
-			
 			assertNotNull(font, "No se ha inicializado bien la fuente");
-			
-			
-			log.info("Datos fuente estado CRITICAL familia "+font.getFont().getFamily()+" tamano "+font.getFont().getSize()+" color "+font.getColor());
-			
-			assertTrue(font.getFont().getFamily().equals("Serif"),"No es el tipo de fuente especificado en el fichero de propiedades");
-			assertEquals(Color.RED,font.getColor(),"No es el color de fuente especificado en el fichero de propiedades");
+			assertEquals("Times",font.getFont().getFamily(),"No es el tipo de fuente especificado en el fichero de propiedades");
+			assertEquals("RED",font.getColor().toString(),"No es el color de fuente especificado en el fichero de propiedades");
 			assertEquals(16,font.getFont().getSize(),"No es el tamaño de fuente especificado en el fichero de propiedades");
 			
 			} catch (IOException e) {

@@ -1,8 +1,11 @@
 package us.muit.fs.a4i.model.entities;
 import java.awt.Color;
+import java.util.logging.Logger;
+
+import us.muit.fs.a4i.config.Context;
 
 public class Font {
-	
+	private static Logger log = Logger.getLogger(Font.class.getName());
 	private Color color;
 	private java.awt.Font font;
 	/**
@@ -18,7 +21,7 @@ public class Font {
 	 */
 	public Font (String color) {
 		this.font = new java.awt.Font ("Serif", java.awt.Font.PLAIN , 10);
-		switch(color){
+		switch(color.toLowerCase()){
 		case "red","rojo":
 			this.color=Color.red;
 			break;
@@ -27,6 +30,9 @@ public class Font {
 			break;
 		case "blue","azul":
 			this.color=Color.blue;
+		    break;
+		case "orange","naranja":
+			this.color=Color.ORANGE;
 		    break;
 		default:
 			this.color=Color.black;
@@ -39,20 +45,25 @@ public class Font {
 	 * @param color color
 	 */
 	public Font (String family, int size, String color) {
-		this.font=new java.awt.Font (family, java.awt.Font.PLAIN , size);
-		switch(color){
+		log.info("Creando fuente con valores familia "+family+" tamano "+size+" color "+color);
+		this.font=new java.awt.Font (family.toLowerCase(), java.awt.Font.PLAIN , size);
+		switch(color.toLowerCase()){
 		case "red","rojo":
-			this.color=Color.red;
+			this.color=Color.RED;
 			break;
 		case "green","verde":
-			this.color=Color.green;
+			this.color=Color.GREEN;
 			break;
 		case "blue","azul":
-			this.color=Color.blue;
+			this.color=Color.BLUE;
+		    break;
+		case "orange","naranja":
+			this.color=Color.ORANGE;
 		    break;
 		default:
-			this.color=Color.black;
-		}			
+			this.color=Color.BLACK;		
+		}	
+		log.info("Se ha creado fuente con el tipo "+font.getFamily()+" y el color "+color);
 	}
 	/**
 	 * Todos los Valores personalizados
@@ -62,26 +73,29 @@ public class Font {
 	 * @param color color
 	 */
 	public Font (String family, int style, int size, String color) {
-		this.font=new java.awt.Font (family, style , size);
-		switch(color){
+		this.font=new java.awt.Font (family.toLowerCase(), style , size);
+		switch(color.toLowerCase()){
 		case "red","rojo":
-			this.color=Color.red;
+			this.color=Color.RED;
 			break;
 		case "green","verde":
-			this.color=Color.green;
+			this.color=Color.GREEN;
 			break;
 		case "blue","azul":
-			this.color=Color.blue;
+			this.color=Color.BLUE;
+		    break;
+		case "orange","naranja":
+			this.color=Color.ORANGE;
 		    break;
 		default:
-			this.color=Color.black;
+			this.color=Color.BLACK;
 		}			
 	}
 
 	public Color getColor() {
-		return color;
+		return this.color;
 	}
 	public java.awt.Font getFont() {
-		return font;
+		return this.font;
 	}
 }

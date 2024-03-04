@@ -3,8 +3,6 @@
  */
 package us.muit.fs.a4i.config;
 
-/**import java.awt.Font;**/
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +65,7 @@ public class Context {
 	/**
 	 * Fichero de propiedades de la API establecido por la aplicación cliente
 	 */
-	private static String appConFile = null;
+	private static String appConfFile = null;
 
 	/**
 	 * Fichero de especificación de métricas e indicadores establecido por la
@@ -161,7 +159,7 @@ public class Context {
 		/**
 		 * Vuelve a leer las propiedades incluyendo las establecidas por la aplicación
 		 */
-		appConFile = appConPath;
+		appConfFile = appConPath;
 
 		// customFile=System.getenv("APP_HOME")+customFile;
 		// Otra opción, Usar una variable de entorno para localizar la ruta de
@@ -169,6 +167,10 @@ public class Context {
 		// También podría localizarse en el home de usuario
 		getContext().properties.load(new FileInputStream(appConPath));
 		log.info("Las nuevas propiedades son " + getContext().properties);
+	}
+	
+	public static String getAppConf() throws IOException {		
+		return appConfFile;		
 	}
 
 	/**
@@ -267,9 +269,7 @@ public class Context {
 			log.info("El color de la fuente de las metricas es el valor por defecto");
 		}
 
-		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
-	
-		log.info("Intento crear la fuente");
+		log.info("Llamo a newFont con los datos color: " + color + " height: " + height + " type: " + type);	
 	
 		return new Font(type, Integer.valueOf(height), color);
 
@@ -277,15 +277,12 @@ public class Context {
 
 	/**
 	 * <p>
-	 * No Implementado
-	 * </p>
-	 * <p>
 	 * Deberá leer las propiedades adecuadas, como color, tamaño, tipo... y
 	 * construir un objeto Font
 	 * </p>
 	 * 
 	 * @param state Estado para el que se solicita el color de fuente
-	 * @return La fuente para el indicador cuando el estado es el par�metro pasado
+	 * @return La fuente para el indicador cuando el estado es el parametro pasado
 	 * @throws IOException problema al leer el fichero
 	 */
 
@@ -295,11 +292,12 @@ public class Context {
 		 * **/
 		Font font = null;
 		// TODO:
-		String propiedad = "Font." + state.toString();
+		String propertyState = "Font." + state.toString();
+		log.info("Raiz que uso para buscar los datos del indicador en estado "+state+" "+propertyState);
 		
-		String color  = properties.getProperty(propiedad + ".color");
-		String height = properties.getProperty(propiedad + ".height");
-		String type   = properties.getProperty(propiedad + ".type");
+		String color  = properties.getProperty(propertyState + ".color");
+		String height = properties.getProperty(propertyState + ".height");
+		String type   = properties.getProperty(propertyState + ".type");
 		
 		log.info("Los datos son, color: " + color + " height: " + height + " type: " + type);
 		log.info("Intento crear la fuente");
@@ -309,9 +307,7 @@ public class Context {
 		} 
 		if (height == null) {
 			height = properties.getProperty("Font.default.height");
-		}
-		if (type == null){
-		} 
+		}		
 		if(type == null){
 			type   = properties.getProperty("Font.default.type");	
 		}
