@@ -103,7 +103,7 @@ dependencies {
     //JAVADOC: https://poi.apache.org/apidocs/5.0/
    // implementation 'org.apache.poi:poi:5.2.5'
    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.9'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
     //Para leer la configuración como ficheros con datos en formato json
     // https://mvnrepository.com/artifact/javax.json/javax.json-api
     //JAVADOC: https://javadoc.io/doc/org.glassfish/javax.json/latest/overview-summary.html

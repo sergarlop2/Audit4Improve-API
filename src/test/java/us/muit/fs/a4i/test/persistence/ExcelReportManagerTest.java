@@ -110,13 +110,10 @@ class ExcelReportManagerTest {
 		underTest=new ExcelReportManager(excelPath,excelName);	
 	
 		underTest.setFormater(new ReportFormater());
-		try {
+	
 			log.info("El informe tiene el id "+informe.getEntityId());
 			underTest.saveReport(informe);
-		} catch (ReportNotDefinedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
 	}
 }

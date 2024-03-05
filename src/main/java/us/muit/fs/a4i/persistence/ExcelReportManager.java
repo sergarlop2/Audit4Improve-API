@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -26,13 +28,12 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFFont;
-
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.model.StylesTable;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-
-
-import org.apache.poi.ss.usermodel.Row;
 
 
 import us.muit.fs.a4i.exceptions.ReportNotDefinedException;
@@ -69,7 +70,8 @@ import us.muit.fs.a4i.model.entities.Font;
  */
 public class ExcelReportManager implements PersistenceManager, FileManager {
 	private static Logger log = Logger.getLogger(ExcelReportManager.class.getName());
-	private static int fontIndex=0;
+	
+	private Map<String,XSSFCellStyle> styles=new HashMap<String,XSSFCellStyle>();
 	/**
 	 * <p>
 	 * Referencia al gestor de estilo que se va a utilizar
@@ -142,9 +144,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 		log.info("Solicita una hoja nueva del libro manejado, para la entidad con id: "+entityId);
 		if (wb == null) {
 			inputStream = new FileInputStream(filePath + fileName);
-		//	wb = (HSSFWorkbook) HSSWorkbookFactory.create(inputStream);
-			//XSSFWorkbookFactory factory=new SSSFWorkbookFactory();
-			
+	
 			wb = new XSSFWorkbook(inputStream);
 			log.info("Generado workbook");
 
@@ -180,15 +180,13 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 	}
 
 	/**
-	 * Guarda en un hoja limpia con el nombre del id del informe todas las métricas
-	 * y los indicadores que incluya
+	 * Un informe será una hoja en el libro excel
+	 * Guarda en un hoja limpia con el nombre del id del informe 
+	 * Incluye todas las métricas y los indicadores que tenga report
 	 */
 	@Override
-	public void saveReport(ReportI report) throws ReportNotDefinedException {
+	public void saveReport(ReportI report){
 		log.info("Guardando informe con id: "+report.getEntityId());
-		if (report == null) {
-			throw new ReportNotDefinedException();
-		}
 		try {
 			FileOutputStream out;
 			if (sheet == null) {
@@ -196,9 +194,11 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 			}
 
 			/**
-			 * A partir de la última que haya Fila 1: Encabezado métricas Filas 2 a N:Para
-			 * cada métrica del informe una fila Fila N+1: Encabezado indicadores Filas N+2
-			 * a M: Para cada indicador una fila
+			 * A partir de la última que haya 
+			 * Fila 1: Encabezado métricas 
+			 * Filas 2 a N:Para cada métrica del informe una fila 
+			 * Fila N+1: Encabezado indicadores 
+			 * Filas N+2 a M: Para cada indicador una fila
 			 */
 			int rowIndex = sheet.getLastRowNum();
 			rowIndex++;
@@ -233,7 +233,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 
 		int rowIndex = sheet.getLastRowNum();
 		rowIndex++;
-		Row row = sheet.createRow(rowIndex);
+		XSSFRow row = sheet.createRow(rowIndex);
 		log.info("Indice de fila nueva " + rowIndex);
 		int cellIndex = 0;
 		// Aquí debería incorporar el formato de fuente en las celdas
@@ -259,67 +259,79 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
         //Mantengo uno diferente porque en el futuro la información del indicador será distinta a la de la métrica
 		int rowIndex = sheet.getLastRowNum();
 		rowIndex++;
-		Row row = sheet.createRow(rowIndex);
+		XSSFRow row = sheet.createRow(rowIndex);
 		log.info("Indice de fila nueva " + rowIndex);
-		int cellIndex = 0;
+		int cellIndex = 0;		
+		StylesTable stylesTable=wb.getStylesSource();
+		stylesTable.ensureThemesTable();
 
-		// Aquí debería indicar el formato de fuente en las celdas, que dependerá del
-		// estado del índice
-     //   CellStyle estilo=wb.getCellStyleAt((short) 1);
-     
-		//CellStyle style = wb.createCellStyle();
 		
-	/*
-		style.cloneStyleFrom(estilo);
-		if(style.equals(estilo) && (style.getIndex()!=estilo.getIndex())) {
-			log.info("Los estilos son iguales pero no son el mismo");
-		}else
-		{
-			log.info("Esto no va bien");
-		}
-*/
+		
+		XSSFCellStyle style=styles.get(indicator.getIndicator().getState().toString());
 		try {
-			CellStyle style = wb.createCellStyle();
-			XSSFFont poiFont = wb.createFont();		
+			if (style==null){
+				
+				style = stylesTable.createCellStyle();
+				XSSFFont poiFont = wb.createFont();		
+				
+				Font a4iFont=formater.getIndicatorFont(indicator.getIndicator().getState());
+				//Establezco el color y la fuente a utilizar en el texto de los indicadores.
+				
+			//	HSSFPalette palette = wb.getCustomPalette();
+				// get the color which most closely matches the color you want to use
+				//HSSFColor myColor = palette.findSimilarColor(a4iFont.getColor().getRed(), a4iFont.getColor().getGreen(), a4iFont.getColor().getBlue());
+				// get the palette index of that color 
+				//HSSFColor myColor=new HSSFColor(0,0,a4iFont.getColor());
+				byte[] color= {(byte) a4iFont.getColor().getRed(),(byte) a4iFont.getColor().getGreen(),(byte) a4iFont.getColor().getBlue()};
+				XSSFColor myColor=new XSSFColor(color);
+				
+				log.info("El nuevo color es "+myColor.getARGBHex());
+				
+				
+				//myColor.setIndexed(newColor++);
+				
+				poiFont.setFontHeightInPoints((short)a4iFont.getFont().getSize());
+				poiFont.setFontName(a4iFont.getFont().getFamily());
+				poiFont.setColor(myColor);	
+				poiFont.setBold(true);
+			    poiFont.setItalic(false);
+				
+				log.info("La nueva fuente poi es "+poiFont.toString());
+				
+				//style.setFillBackgroundColor(a4iFont.getColor().toString());					
+				style.setFont(poiFont);
+				style.setFillBackgroundColor(myColor);
+				
+				styles.put(indicator.getIndicator().getState().toString(), style);
+		
+				log.info("Creado el estilo con indice "+style.getIndex());
+			}
+			XSSFCell cell;
+				
+			row.createCell(cellIndex).setCellValue(indicator.getName());
+			sheet.autoSizeColumn(cellIndex++);		
 			
-			Font a4iFont=formater.getIndicatorFont(indicator.getIndicator().getState());
-			//Establezco el color y la fuente a utilizar en el texto de los indicadores.
+			row.createCell(cellIndex).setCellValue(indicator.getValue().toString());
+			sheet.autoSizeColumn(cellIndex++);
 			
-		//	HSSFPalette palette = wb.getCustomPalette();
-			// get the color which most closely matches the color you want to use
-			//HSSFColor myColor = palette.findSimilarColor(a4iFont.getColor().getRed(), a4iFont.getColor().getGreen(), a4iFont.getColor().getBlue());
-			// get the palette index of that color 
-			//HSSFColor myColor=new HSSFColor(0,0,a4iFont.getColor());
-			byte[] color= {(byte) a4iFont.getColor().getRed(),(byte) a4iFont.getColor().getGreen(),(byte) a4iFont.getColor().getBlue()};
-			XSSFColor myColor=new XSSFColor(color);
-			log.info("El nuevo color es "+myColor.getARGBHex());
-			//short palIndex = myColor.getIndex();
+			row.createCell(cellIndex).setCellValue(indicator.getUnit());
+			sheet.autoSizeColumn(cellIndex++);
 			
-			poiFont.setFontHeight((short)a4iFont.getFont().getSize());
-			poiFont.setFontName(a4iFont.getFont().getFamily());
-			poiFont.setColor(myColor.getIndexed());	
-			log.info("La nueva fuente poi es "+poiFont.toString());
+			row.createCell(cellIndex).setCellValue(indicator.getDescription());
+			sheet.autoSizeColumn(cellIndex++);
 			
-			//style.setFillBackgroundColor(a4iFont.getColor().toString());					
-			style.setFont(poiFont);
-			//style.setFillBackgroundColor(myColor.getIndexed());
-			log.info("Creado el estilo con indice "+style.getIndex());
-			row.createCell(cellIndex++).setCellValue(indicator.getName());
-			row.createCell(cellIndex++).setCellValue(indicator.getValue().toString());
-			row.createCell(cellIndex++).setCellValue(indicator.getUnit());
-			row.createCell(cellIndex++).setCellValue(indicator.getDescription());
-			
-			row.createCell(cellIndex).setCellStyle(style);
-			//row.createCell(cellIndex).getCellStyle().cloneStyleFrom(style);
-			//row.getCell(cellIndex).getCellStyle().cloneStyleFrom(style);
+			cell=row.createCell(cellIndex);
+			cell.setCellStyle(style);		
 			log.info("Establecido el estilo con indice "+style.getIndex()+" en la celda "+cellIndex);
-			row.createCell(cellIndex++).setCellValue(indicator.getIndicator().getState().toString());
-
-			row.createCell(cellIndex++).setCellValue(indicator.getSource());
+			cell.setCellValue(indicator.getIndicator().getState().toString());
+			sheet.autoSizeColumn(cellIndex++);		
+			
+			row.createCell(cellIndex).setCellValue(indicator.getSource());
+			sheet.autoSizeColumn(cellIndex++);		
 
 			row.createCell(cellIndex).setCellValue(indicator.getDate().toString());
-
-			log.info("Indice de celda final " + cellIndex);			
+			sheet.autoSizeColumn(cellIndex);
+			log.info("Indice de celda final " + cellIndex);					
 			
 		} catch (IOException e) {
 			log.warning("Problema al abrir el fichero con los formatos");
