@@ -58,6 +58,19 @@ class ExcelReportManagerTest {
 	@Mock(serializable=true)
 	private static Indicator indicatorIntMock = Mockito.mock(Indicator.class);
 	
+	@Mock(serializable = true)
+	private static ReportItem<Integer> itemIndicatorIntMock2 = Mockito.mock(ReportItem.class);
+	
+	@Mock(serializable=true)
+	private static Indicator indicatorIntMock2 = Mockito.mock(Indicator.class);
+	
+	@Mock(serializable = true)
+	private static ReportItem<Integer> itemIndicatorIntMock3 = Mockito.mock(ReportItem.class);
+	
+	@Mock(serializable=true)
+	private static Indicator indicatorIntMock3 = Mockito.mock(Indicator.class);
+	
+	
 	
 	private static String excelPath;
 	private static String excelName;
@@ -95,11 +108,29 @@ class ExcelReportManagerTest {
 		Mockito.when(itemIndicatorIntMock.getValue()).thenReturn(22);
 		Mockito.when(itemIndicatorIntMock.getName()).thenReturn("otracosa");
 		Mockito.when(itemIndicatorIntMock.getUnit()).thenReturn("cosas");
-		Mockito.when(itemIndicatorIntMock.getDescription()).thenReturn("MetricaEjemplo");		
+		Mockito.when(itemIndicatorIntMock.getDescription()).thenReturn("Indicador Ejemplo");		
 		Mockito.when(itemIndicatorIntMock.getDate()).thenReturn(fecha);	
 		Mockito.when(indicatorIntMock.getState()).thenReturn(IndicatorState.CRITICAL);
 		Mockito.when(itemIndicatorIntMock.getIndicator()).thenReturn(indicatorIntMock);
 		listaInd.add(itemIndicatorIntMock);
+		
+		Mockito.when(itemIndicatorIntMock2.getValue()).thenReturn(67);
+		Mockito.when(itemIndicatorIntMock2.getName()).thenReturn("indicador2");
+		Mockito.when(itemIndicatorIntMock2.getUnit()).thenReturn("unidad2");
+		Mockito.when(itemIndicatorIntMock2.getDescription()).thenReturn("Indicador Ejemplo 2");		
+		Mockito.when(itemIndicatorIntMock2.getDate()).thenReturn(fecha);	
+		Mockito.when(indicatorIntMock2.getState()).thenReturn(IndicatorState.WARNING);
+		Mockito.when(itemIndicatorIntMock2.getIndicator()).thenReturn(indicatorIntMock2);
+		listaInd.add(itemIndicatorIntMock2);
+		
+		Mockito.when(itemIndicatorIntMock3.getValue()).thenReturn(98);
+		Mockito.when(itemIndicatorIntMock3.getName()).thenReturn("indicador3");
+		Mockito.when(itemIndicatorIntMock3.getUnit()).thenReturn("unidad3");
+		Mockito.when(itemIndicatorIntMock3.getDescription()).thenReturn("IndicadorEjemplo3");		
+		Mockito.when(itemIndicatorIntMock3.getDate()).thenReturn(fecha);	
+		Mockito.when(indicatorIntMock3.getState()).thenReturn(IndicatorState.CRITICAL);
+		Mockito.when(itemIndicatorIntMock3.getIndicator()).thenReturn(indicatorIntMock3);
+		listaInd.add(itemIndicatorIntMock3);
 				
 		Mockito.when(informe.getAllMetrics()).thenReturn(listaMetric);
 		Mockito.when(informe.getAllIndicators()).thenReturn(listaInd);
