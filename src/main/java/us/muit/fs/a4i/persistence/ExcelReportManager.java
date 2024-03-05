@@ -205,7 +205,7 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 				rowIndex++;
 			}
 
-			out = new FileOutputStream(filePath + "NEW" + fileName);
+			out = new FileOutputStream(filePath + fileName);
 			wb.write(out);
 			out.close();
 		} catch (Exception e) {
