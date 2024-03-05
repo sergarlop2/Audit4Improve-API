@@ -52,7 +52,26 @@
 			"type": "java.lang.Double",
 			"description": "Numero de issues cerradas",
 			"unit": "issues"
+		},
+		{
+			"name": "openProjects",
+			"type": "java.lang.Integer",
+			"description": "Proyectos abiertos",
+			"unit": "projects"
+		},
+		{
+			"name": "repositories",
+			"type": "java.lang.Integer",
+			"description": "Número de repositorios",
+			"unit": "repositories"
+		},
+		{
+			"name": "repositoriesWithPullRequest",
+			"type": "java.lang.Integer",
+			"description": "Número de repositorios",
+			"unit": "repositories"
 		}
+		
 	],
 	"indicators": [{
 			"name": "issuesProgress",
