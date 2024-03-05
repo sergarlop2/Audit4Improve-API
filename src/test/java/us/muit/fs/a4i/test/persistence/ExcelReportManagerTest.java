@@ -8,6 +8,8 @@
  */
 package us.muit.fs.a4i.test.persistence;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +51,7 @@ class ExcelReportManagerTest {
 	private static ReportItem<Integer> metricIntMock = Mockito.mock(ReportItem.class);
 	@Mock(serializable = true)
 	private static ReportItem<String> metricStrMock = Mockito.mock(ReportItem.class);
+	
 	@Mock(serializable = true)
 	private static ReportI informe = Mockito.mock(ReportI.class);
 	
@@ -142,9 +145,41 @@ class ExcelReportManagerTest {
 	
 		underTest.setFormater(new ReportFormater());
 	
-			log.info("El informe tiene el id "+informe.getEntityId());
-			underTest.saveReport(informe);
+		log.info("El informe tiene el id "+informe.getEntityId());
+		underTest.saveReport(informe);
 		
 
 	}
+	/**
+	 * <p>Test para el m�todo de eliminar un informe en excel, solo verifica que si es null da excepcion</p>
+	 * @author Mariana Reyes Henriquez
+	 */
+	@Test
+	void ExcelDelete() {
+		excelPath = new String("src" + File.separator + "test" + File.separator + "resources"+File.separator);
+		excelName= new String("excelTest.xlsx");
+		Mockito.when(informe.getEntityId()).thenReturn("entidadTest");
+		
+		underTest=new ExcelReportManager(excelPath,excelName);	
+		underTest.setFormater(new ReportFormater());
+		
+		log.info("El informe tiene el id "+informe.getEntityId());
+		underTest.saveReport(informe);
+		try {
+			log.info("Se intenta eliminar un informe que no existe");
+			underTest.deleteReport(null);
+			fail("Debería dar excepcion");
+		} catch (ReportNotDefinedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			underTest.deleteReport(informe);
+		} catch (ReportNotDefinedException e) {
+			fail("No debería dar la excepción");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
 }

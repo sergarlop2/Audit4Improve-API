@@ -365,7 +365,32 @@ public class ExcelReportManager implements PersistenceManager, FileManager {
 
 	@Override
 	public void deleteReport(ReportI report) throws ReportNotDefinedException {
-		// TODO Auto-generated method stub
+	
+		log.info("Eliminando informe excel");
+		if (report == null) {
+			throw new ReportNotDefinedException();
+		}
+		try {
+			inputStream = new FileInputStream(filePath + fileName);
 
+			wb = new XSSFWorkbook(inputStream);
+			log.info("Generado workbook");
+			sheet = wb.getSheet(report.getEntityId());
+			if (sheet != null) {
+				int index = wb.getSheetIndex(sheet);
+				wb.removeSheetAt(index);
+				FileOutputStream out;
+				out = new FileOutputStream(filePath + fileName);
+				wb.write(out);
+				out.close();
+				
+			}else {
+				log.info("No existe el informe "+report.getEntityId());
+			}
+			inputStream.close();
+		}catch (Exception e) { 
+			
+			e.printStackTrace();		
+	}
 	}
 }
