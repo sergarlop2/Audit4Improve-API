@@ -152,8 +152,8 @@ public class GitHubOrganizationEnquirer extends GitHubEnquirer {
 						.description("Obtiene el número total de equipos de la organización.");
 				metric = reportBuilder.build();
 				break;
-			case "OpenProjects":
-				log.info("OpenProjects");
+			case "openProjects":
+				log.info("openProjects");
 				projectsIterableOpen = remoteOrg.listProjects(GHProject.ProjectStateFilter.OPEN);
 				projectsOpen = projectsIterableOpen.toList();
 				log.info(projectsOpen.toString());

@@ -50,7 +50,7 @@ public class GitHubOrganizationEnquirerTest {
 	void testGetPullRequest() throws MetricException, ReportItemException {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 		// TEST 2: PullRequest
-		ReportItem<Integer> metricsPullRequest = ghEnquirer.getMetric("PullRequest", "MIT-FS");
+		ReportItem<Integer> metricsPullRequest = ghEnquirer.getMetric("pullRequest", "MIT-FS");
 		log.info(metricsPullRequest.getValue().toString());
 		assertEquals(22, metricsPullRequest.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 22 pull requests
 	}
@@ -83,7 +83,7 @@ public class GitHubOrganizationEnquirerTest {
 	void testGetMembers() throws MetricException, ReportItemException {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 	// TEST 4: Members
-	ReportItem<Integer> metricsMembers = ghEnquirer.getMetric("Members", "MIT-FS");
+	ReportItem<Integer> metricsMembers = ghEnquirer.getMetric("members", "MIT-FS");
 	log.info(metricsMembers.getValue().toString());
 	assertEquals(30,metricsMembers.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 30 miembros
 	
@@ -100,7 +100,7 @@ public class GitHubOrganizationEnquirerTest {
 	void testGetTeams() throws MetricException, ReportItemException {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 		// TEST 5: Teams
-		ReportItem<Integer> metricsTeams = ghEnquirer.getMetric("Teams", "MIT-FS");
+		ReportItem<Integer> metricsTeams = ghEnquirer.getMetric("teams", "MIT-FS");
 		log.info(metricsTeams.getValue().toString());
 		assertEquals(2,metricsTeams.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 2 teams
 	}
@@ -115,7 +115,7 @@ public class GitHubOrganizationEnquirerTest {
 	void testGetOpenProjects() throws MetricException, ReportItemException {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 		// TEST 6: OpenProjects
-		ReportItem<Integer> metricsOpenProjects = ghEnquirer.getMetric("OpenProjects", "MIT-FS");
+		ReportItem<Integer> metricsOpenProjects = ghEnquirer.getMetric("openProjects", "MIT-FS");
 		log.info(metricsOpenProjects.getValue().toString());
 		assertEquals(0,metricsOpenProjects.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 0 proyectos abiertos (classic)
 	}
@@ -130,7 +130,7 @@ public class GitHubOrganizationEnquirerTest {
 	void testGetClosedProjects() throws MetricException, ReportItemException {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 		// TEST 7: ClosedProjects
-		ReportItem<Integer> metricsClosedProjects = ghEnquirer.getMetric("ClosedProjects", "MIT-FS");
+		ReportItem<Integer> metricsClosedProjects = ghEnquirer.getMetric("closedProjects", "MIT-FS");
 		log.info(metricsClosedProjects.getValue().toString());
 		assertEquals(2,metricsClosedProjects.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 2 proyectos cerrados (classic)
 	}
@@ -146,7 +146,7 @@ public class GitHubOrganizationEnquirerTest {
 		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 		
 		// TEST 1: RepositoriesWithOpenPullRequest
-		ReportItem<Integer> metricsRepositoriesWithOpenPullRequest = ghEnquirer.getMetric("RepositoriesWithOpenPullRequest", "MIT-FS");
+		ReportItem<Integer> metricsRepositoriesWithOpenPullRequest = ghEnquirer.getMetric("repositoriesWithOpenPullRequest", "MIT-FS");
 		log.info(metricsRepositoriesWithOpenPullRequest.getValue().toString());
 		assertEquals(5,metricsRepositoriesWithOpenPullRequest.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 4 repositorios con pull requests abiertos
 	}
