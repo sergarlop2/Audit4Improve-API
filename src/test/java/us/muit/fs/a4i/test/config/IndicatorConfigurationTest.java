@@ -19,16 +19,24 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import us.muit.fs.a4i.config.Context;
 import us.muit.fs.a4i.config.IndicatorConfiguration;
+import us.muit.fs.a4i.exceptions.ReportItemException;
+import us.muit.fs.a4i.model.entities.Indicator;
+import us.muit.fs.a4i.model.entities.IndicatorI;
+import us.muit.fs.a4i.model.entities.ReportItem;
+import us.muit.fs.a4i.model.entities.ReportItem.ReportItemBuilder;
+import us.muit.fs.a4i.model.entities.ReportItemI;
 
 class IndicatorConfigurationTest {
 	private static Logger log = Logger.getLogger(IndicatorConfigurationTest.class.getName());
 	static IndicatorConfiguration underTest;
 	static String appConfPath;
 	String appIndicatorsPath = "/test/home";
-
+	
 	/**
 	 * <p>Acciones a realizar antes de ejecutar los tests definidos en esta clase. En este caso se establece la ruta al fichero de configuración, en la carpeta resources dentro del paquete de test</p>
 	 * @throws java.lang.Exception
@@ -95,7 +103,10 @@ class IndicatorConfigurationTest {
 			assertNotNull(returnedMap, "Debería devolver un hashmap, el indicador overdued está definido");
 			assertTrue(returnedMap.containsKey("unit"), "La clave unit tiene que estar en el mapa");
 			assertTrue(returnedMap.containsKey("description"), "La clave description tiene que estar en el mapa");
-
+			// Se comprueba que los indicadores incluyen los limites definidos
+			assertTrue(returnedMap.containsKey(underTest.OK_LIMIT), "La clave correspondiente al limite del estado OK tiene que estar en el mapa");
+			assertTrue(returnedMap.containsKey(underTest.WARNING_LIMIT), "La clave correspondiente al limite del estado WARNING tiene que estar en el mapa");
+			assertTrue(returnedMap.containsKey(underTest.CRITICAL_LIMIT), "La clave correspondiente al limite del estado CRITICAL tiene que estar en el mapa");
 			// Busco una métrica que existe pero con un tipo incorrecto
 			assertNull(underTest.definedIndicator("overdued", valKOMock.getClass().getName()),
 					"Debería ser nulo, el indicador overdued está definido para Double");
@@ -127,6 +138,10 @@ class IndicatorConfigurationTest {
 			assertNotNull(returnedMap, "Debería devolver un hashmap, el indicador está definido");
 			assertTrue(returnedMap.containsKey("unit"), "La clave unit tiene que estar en el mapa");
 			assertTrue(returnedMap.containsKey("description"), "La clave description tiene que estar en el mapa");
+			// Se comprueba que los indicadores incluyen los limites definidos
+			assertTrue(returnedMap.containsKey(underTest.OK_LIMIT), "La clave correspondiente al limite del estado OK tiene que estar en el mapa");
+			assertTrue(returnedMap.containsKey(underTest.WARNING_LIMIT), "La clave correspondiente al limite del estado WARNING tiene que estar en el mapa");
+			assertTrue(returnedMap.containsKey(underTest.CRITICAL_LIMIT), "La clave correspondiente al limite del estado CRITICAL tiene que estar en el mapa");
 		} catch (FileNotFoundException e) {
 			fail("No debería devolver esta excepción");
 		} catch (Exception e) {
@@ -158,8 +173,65 @@ class IndicatorConfigurationTest {
 	}
 
 	@Test
-	void testGetIndicatorState() {
-		fail("Not yet implemented");
+	void testGetIndicatorState(){ 
+		// Prueba 1.
+		Context.setAppRI(appConfPath);
+	
+		ReportItemI indicator = null;
+		IndicatorI.IndicatorState estado = IndicatorI.IndicatorState.UNDEFINED;
+		
+		try {
+			indicator = new ReportItemBuilder<Double>("overdued", 2.0).build();
+		} catch (ReportItemException e) {
+			fail("El archivo de configuración esperado no contiene el indicador necesario para esta prueba.");
+		}
+		
+		estado = underTest.getIndicatorState(indicator);
+		
+		assertTrue(estado == IndicatorI.IndicatorState.OK, "El estado es INCORRECTO. Debería de ser OK.");
+		
+		
+		
+	
+	   try {
+		indicator = new ReportItemBuilder<Double>("overdued", 9.0).build();
+	} catch (ReportItemException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
+		
+		estado = underTest.getIndicatorState(indicator);
+		
+		assertTrue(estado == IndicatorI.IndicatorState.WARNING, "El estado es INCORRECTO. Debería de ser WARNING.");
+
+
+	
+	try {
+		indicator = new ReportItemBuilder<Double>("overdued", 13.0).build();
+	} catch (ReportItemException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+		estado = underTest.getIndicatorState(indicator);
+		
+		assertTrue(estado == IndicatorI.IndicatorState.CRITICAL, "El estado es INCORRECTO. Debería de ser CRITICAL.");
+
+
+	
+	try {
+		indicator = new ReportItemBuilder<Double>("issuesRatio", 13.0).build();
+	} catch (ReportItemException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+		estado = underTest.getIndicatorState(indicator);
+		
+		assertTrue(estado == IndicatorI.IndicatorState.UNDEFINED, "El estado es INCORRECTO. Debería de ser UNDEFINED.");
+
+
+	}
+
 
 }
