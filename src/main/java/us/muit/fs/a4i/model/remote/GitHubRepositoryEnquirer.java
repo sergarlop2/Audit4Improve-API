@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositoryStatistics;
@@ -42,11 +43,15 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		metricNames.add("watchers");
 		metricNames.add("starts");		
 		metricNames.add("issues");
+		metricNames.add("closedIssues");
+		metricNames.add("openIssues");
 		metricNames.add("creation");
 		metricNames.add("lastUpdated");
 		metricNames.add("lastPush");
 		metricNames.add("totalAdditions");
 		metricNames.add("totalDeletions");
+		metricNames.add("collaborators");
+		metricNames.add("ownerCommits");
 		log.info("A�adidas m�tricas al GHRepositoryEnquirer");
 	}
 
@@ -80,6 +85,18 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 					+ repo.getDescription());
 			log.info("leído " + repo);
 			report = new Report(repositoryId);
+			
+			/**
+			 * Métricas más elaboradas, requieren más "esfuerzo"
+			 */
+			
+			
+			report.addMetric(getTotalAdditions(repo));
+			log.info("Incluida metrica totalAdditions ");
+			
+			report.addMetric(getTotalDeletions(repo));
+			log.info("Incluida metrica totalDeletions ");
+
 
 			/**
 			 * Métricas directas de tipo conteo
@@ -88,6 +105,12 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 			
 			report.addMetric(getSubscribers(repo));
 			log.info("Incluida metrica suscribers ");
+			
+			report.addMetric(getCollaborators(repo));
+			log.info("Incluida metrica collaborators ");
+			
+			report.addMetric(getOwnerCommits(repo));
+			log.info("Incluida metrica ownerCommits ");
 		
 			report.addMetric(getForks(repo));
 			log.info("Incluida metrica forks ");
@@ -100,6 +123,13 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 			
 			report.addMetric(getIssues(repo));
 			log.info("Incluida metrica issues ");
+			
+			report.addMetric(getOpenIssues(repo));
+			log.info("Incluida metrica openIssues ");
+			
+			report.addMetric(getClosedIssues(repo));
+			log.info("Incluida metrica closedIssues ");
+			
 			
 
 		
@@ -115,16 +145,8 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 			report.addMetric(getLastUpdated(repo));
 			log.info("Incluida metrica lastUpdates ");
 			
-			/**
-			 * Métricas más elaboradas, requieren más "esfuerzo"
-			 */
 			
-			report.addMetric(getTotalAdditions(repo));
-			log.info("Incluida metrica totalAdditions ");
-			
-			report.addMetric(getTotalDeletions(repo));
-			log.info("Incluida metrica totalDeletions ");
-
+		
 			
 		} catch (Exception e) {
 			log.severe("Problemas en la conexión " + e);
@@ -201,6 +223,18 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		case "lastPush":
 			metric = getLastPush(remoteRepo);
 			break;
+		case "collaborators":
+			metric = getCollaborators(remoteRepo);
+			break;
+		case "ownerCommits":
+			metric = getOwnerCommits(remoteRepo);
+			break;
+		case "openIssues":
+			metric = getOpenIssues(remoteRepo);
+			break;
+		case "closedIssues":
+			metric = getClosedIssues(remoteRepo);
+			break;
 		default:
 			throw new MetricException("La métrica " + metricName + " no está definida para un repositorio");
 		}
@@ -226,6 +260,7 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		ReportItem metric = null;
 
 		GHRepositoryStatistics data = remoteRepo.getStatistics();
+	
 		List<CodeFrequency> codeFreq;
 		try {
 			codeFreq = data.getCodeFrequency();
@@ -241,19 +276,17 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 
 				}
 			}
-			ReportItemBuilder<Integer> totalAdditions = new ReportItem.ReportItemBuilder<Integer>("totalAdditions",
+			ReportItemBuilder<Integer> builder = new ReportItem.ReportItemBuilder<Integer>("totalAdditions",
 					additions);
-			totalAdditions.source("GitHub, calculada")
+			builder.source("GitHub, calculada")
 					.description("Suma el total de adiciones desde que el repositorio se creó");
-			metric = totalAdditions.build();
+			metric = builder.build();
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			log.warning("Problemas al leer codefrequency en getTotalAdditions");
 			e.printStackTrace();
-		} catch (ReportItemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		return metric;
 
 	}
@@ -359,11 +392,42 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		return builder.build();
 	}
 	
+	
+	private ReportItem getOwnerCommits(GHRepository repo) {
+		log.info("Consultando los commits del responsable del repositorio");
+		ReportItemBuilder<Integer> builder=null;
+		GHRepositoryStatistics data = repo.getStatistics();
+	
+		try {
+			builder = new ReportItem.ReportItemBuilder<Integer>("ownerCommits",
+					data.getParticipation().getOwnerCommits().size());
+			
+			builder.description("Commits del responsable").source("GitHub");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return builder.build();
+	}
+	
 	private ReportItem getIssues(GHRepository repo) {
 		log.info("Consultando los issues");
 		ReportItemBuilder<Integer> builder=null;
 		try {
 			builder = new ReportItem.ReportItemBuilder<Integer>("issues",
+					repo.getIssues(GHIssueState.ALL).size());
+			builder.description("Numero de asuntos totales").source("GitHub");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return builder.build();
+	}
+	private ReportItem getOpenIssues(GHRepository repo) {
+		log.info("Consultando los issues abiertos");
+		ReportItemBuilder<Integer> builder=null;
+		try {
+			builder = new ReportItem.ReportItemBuilder<Integer>("openIssues",
 					repo.getOpenIssueCount());
 			builder.description("Numero de asuntos abiertos").source("GitHub");
 		} catch (Exception e) {
@@ -372,8 +436,35 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
+	private ReportItem getClosedIssues(GHRepository repo) {
+		log.info("Consultando los issues cerrados");
+		ReportItemBuilder<Integer> builder=null;
+		try {
+			builder = new ReportItem.ReportItemBuilder<Integer>("closedIssues",
+					repo.getIssues(GHIssueState.CLOSED).size());
+			builder.description("Numero de asuntos cerrados").source("GitHub");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return builder.build();
+	}
+	
+	private ReportItem getCollaborators(GHRepository repo) {
+		log.info("Consultando los colaboradores");
+		ReportItemBuilder<Integer> builder=null;
+		try {
+			builder = new ReportItem.ReportItemBuilder<Integer>("collaborators",
+					repo.getCollaborators().size());
+			builder.description("Numero de colaboradores en el repositorio").source("GitHub");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return builder.build();
+	}
 	private ReportItem getCreation(GHRepository repo) {
-		log.info("Consultando los watchers");
+		log.info("Consultando fecha de creación");
 		ReportItemBuilder<Date> builder=null;
 		try {
 			builder = new ReportItem.ReportItemBuilder<Date>("creation",

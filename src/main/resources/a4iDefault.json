@@ -6,6 +6,18 @@
 			"unit": "subscribers"
 		},
 		{
+			"name": "collaborators",
+			"type": "java.lang.Integer",
+			"description": "Número de colaboradores de un repositorio",
+			"unit": "collaborators"
+		},
+		{
+			"name": "ownerCommits",
+			"type": "java.lang.Integer",
+			"description": "Número de commits del propietario del repositorio",
+			"unit": "commits"
+		},
+		{
 			"name": "members",
 			"type": "java.lang.Integer",
 			"description": "Miembros de una organización",
@@ -36,10 +48,16 @@
 			"unit": "followers"
 		},
 		{
-			"name": "issues",
+			"name": "totalAdditions",
 			"type": "java.lang.Integer",
-			"description": "Tareas sin finalizar en el repositorio",
-			"unit": "issues"
+			"description": "Inserciones desde que se inició el repositorio",
+			"unit": "additions"
+		},
+		{
+			"name": "totalDeletions",
+			"type": "java.lang.Integer",
+			"description": "Eliminaciones desde que se inició el repositorio",
+			"unit": "deletions"
 		},
 		{
 			"name": "pullRequests",
@@ -73,14 +91,20 @@
 		},
 		{
 			"name": "openIssues",
-			"type": "java.lang.Double",
+			"type": "java.lang.Integer",
 			"description": "Numero de issues abiertas",
 			"unit": "issues"
 		},
 		{
 			"name": "closedIssues",
-			"type": "java.lang.Double",
-			"description": "Numero de issues cerradas",
+			"type": "java.lang.Integer",
+			"description": "Numero de issues cerrados",
+			"unit": "issues"
+		},
+		{
+			"name": "issues",
+			"type": "java.lang.Integer",
+			"description": "Tareas totales",
 			"unit": "issues"
 		},
 		{
