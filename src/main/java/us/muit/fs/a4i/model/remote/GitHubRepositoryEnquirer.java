@@ -22,6 +22,7 @@ import us.muit.fs.a4i.model.entities.ReportItem.ReportItemBuilder;
 
 /**
  * @author Isabel Román
+ * Deuda técnica: debería seguir la misma filosofía que GitHubOrganizationEnquirer para evitar la replicación de código
  *
  */
 public class GitHubRepositoryEnquirer extends GitHubEnquirer {
@@ -75,12 +76,7 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 			/**
 			 * Métricas directas de tipo conteo
 			 */
-
-			/*
-			 * MetricBuilder<Integer> subscribers = new
-			 * Metric.MetricBuilder<Integer>("subscribers",
-			 * remoteRepo.getSubscribersCount());
-			 */
+		
 			ReportItemBuilder<Integer> subscribers = new ReportItem.ReportItemBuilder<Integer>("subscribers",
 					remoteRepo.getSubscribersCount());
 			subscribers.source("GitHub");
@@ -170,7 +166,7 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 	}
 
 	/**
-	 * Permite consultar desde fuera una métrica del repositorio indicado
+	 * Permite consultar desde fuera una única métrica del repositorio indicado
 	 */
 
 	@Override

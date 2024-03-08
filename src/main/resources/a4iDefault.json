@@ -2,8 +2,20 @@
 	"metrics": [{
 			"name": "subscribers",
 			"type": "java.lang.Integer",
-			"description": "Número de suscriptores, watchers en la web",
+			"description": "Número de suscriptores de un repositorio, watchers en la web",
 			"unit": "subscribers"
+		},
+		{
+			"name": "members",
+			"type": "java.lang.Integer",
+			"description": "Miembros de una organización",
+			"unit": "members"
+		},
+		{
+			"name": "teams",
+			"type": "java.lang.Integer",
+			"description": "Equipos de una organización",
+			"unit": "teams"
 		},
 		{
 			"name": "forks",
@@ -14,14 +26,26 @@
 		{
 			"name": "watchers",
 			"type": "java.lang.Integer",
-			"description": "Observadores, en la web aparece com forks",
+			"description": "Observadores de un repositorio, en la web aparece com forks",
 			"unit": "watchers"
+		},
+		{
+			"name": "followers",
+			"type": "java.lang.Integer",
+			"description": "Seguidores de una organización",
+			"unit": "followers"
 		},
 		{
 			"name": "issues",
 			"type": "java.lang.Integer",
 			"description": "Tareas sin finalizar en el repositorio",
 			"unit": "issues"
+		},
+		{
+			"name": "pullRequests",
+			"type": "java.lang.Integer",
+			"description": "Número de pull requests",
+			"unit": "pull requests"
 		},
 		{
 			"name": "stars",
@@ -60,6 +84,12 @@
 			"unit": "projects"
 		},
 		{
+			"name": "closedProjects",
+			"type": "java.lang.Integer",
+			"description": "Proyectos cerrados",
+			"unit": "projects"
+		},
+		{
 			"name": "repositories",
 			"type": "java.lang.Integer",
 			"description": "Número de repositorios",
@@ -68,7 +98,13 @@
 		{
 			"name": "repositoriesWithPullRequest",
 			"type": "java.lang.Integer",
-			"description": "Número de repositorios",
+			"description": "Número de repositorios con pull requests",
+			"unit": "repositories"
+		},
+		{
+			"name": "repositoriesWithOpenPullRequest",
+			"type": "java.lang.Integer",
+			"description": "Número de repositorios con pull requests pendientes",
 			"unit": "repositories"
 		}
 		

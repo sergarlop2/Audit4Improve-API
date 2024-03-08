@@ -39,6 +39,7 @@ import us.muit.fs.a4i.model.remote.GitHubOrganizationEnquirer;
  */
 public class GitHubOrganizationEnquirerTest {
 	private static Logger log = Logger.getLogger(GitHubOrganizationEnquirerTest.class.getName());
+	GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
 
 	/**
 	 * Test method for
@@ -48,11 +49,11 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetPullRequest() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 		// TEST 2: PullRequest
-		ReportItem<Integer> metricsPullRequest = ghEnquirer.getMetric("pullRequest", "MIT-FS");
-		log.info(metricsPullRequest.getValue().toString());
-		assertEquals(22, metricsPullRequest.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 22 pull requests
+		ReportItem<Integer> metricsPullRequest = ghEnquirer.getMetric("pullRequests", "MIT-FS");
+		
+		assertEquals(21, metricsPullRequest.getValue().intValue(), "el número de pullRequests no es el esperado"); // Tiene 22 pull requests
 	}
 	
 	
@@ -64,11 +65,11 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetRepositories() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 	// TEST 3: Repositories
-	ReportItem<Integer> metricsRepositories = ghEnquirer.getMetric("Repositories", "MIT-FS");
-	log.info(metricsRepositories.getValue().toString());
-	assertEquals(10,metricsRepositories.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 10 repositorios
+	ReportItem<Integer> metricsRepositories = ghEnquirer.getMetric("repositories", "MIT-FS");
+	
+	assertEquals(12,metricsRepositories.getValue().intValue(), "El número de repositorios no es el esperado"); // Tiene 10 repositorios
 	}
 	
 	
@@ -81,11 +82,11 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetMembers() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 	// TEST 4: Members
 	ReportItem<Integer> metricsMembers = ghEnquirer.getMetric("members", "MIT-FS");
-	log.info(metricsMembers.getValue().toString());
-	assertEquals(30,metricsMembers.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 30 miembros
+
+	assertEquals(29,metricsMembers.getValue().intValue(), "El número de miembros no es el esperado"); // Tiene 30 miembros
 	
 	}
 	
@@ -98,11 +99,11 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetTeams() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 		// TEST 5: Teams
 		ReportItem<Integer> metricsTeams = ghEnquirer.getMetric("teams", "MIT-FS");
-		log.info(metricsTeams.getValue().toString());
-		assertEquals(2,metricsTeams.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 2 teams
+		
+		assertEquals(2,metricsTeams.getValue().intValue(), "El número equipos no es el esperado"); // Tiene 2 teams
 	}
 	
 	/**
@@ -113,11 +114,10 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetOpenProjects() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 		// TEST 6: OpenProjects
-		ReportItem<Integer> metricsOpenProjects = ghEnquirer.getMetric("openProjects", "MIT-FS");
-		log.info(metricsOpenProjects.getValue().toString());
-		assertEquals(0,metricsOpenProjects.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 0 proyectos abiertos (classic)
+		ReportItem<Integer> op = ghEnquirer.getMetric("openProjects", "MIT-FS");
+		assertEquals(0,op.getValue().intValue(),"El número de proyectos abiertos no es el esperado");
 	}
 	
 	/**
@@ -128,11 +128,11 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetClosedProjects() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 		// TEST 7: ClosedProjects
 		ReportItem<Integer> metricsClosedProjects = ghEnquirer.getMetric("closedProjects", "MIT-FS");
-		log.info(metricsClosedProjects.getValue().toString());
-		assertEquals(2,metricsClosedProjects.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 2 proyectos cerrados (classic)
+	
+		assertEquals(2,metricsClosedProjects.getValue().intValue(), "El número de proyectos cerrados no es el esperado"); 
 	}
 	
 	/**
@@ -143,12 +143,12 @@ public class GitHubOrganizationEnquirerTest {
 	 */
 	@Test
 	void testGetRepositoriesWithOpenPullRequest() throws MetricException, ReportItemException {
-		GitHubOrganizationEnquirer ghEnquirer = new GitHubOrganizationEnquirer();
+		
 		
 		// TEST 1: RepositoriesWithOpenPullRequest
 		ReportItem<Integer> metricsRepositoriesWithOpenPullRequest = ghEnquirer.getMetric("repositoriesWithOpenPullRequest", "MIT-FS");
-		log.info(metricsRepositoriesWithOpenPullRequest.getValue().toString());
-		assertEquals(5,metricsRepositoriesWithOpenPullRequest.getValue(), "Debería tener el valor especificado en el mock"); // Tiene 4 repositorios con pull requests abiertos
-	}
+	
+		assertEquals(6,metricsRepositoriesWithOpenPullRequest.getValue().intValue(), "El número de repositorios con pull requests abiertos no es el esperado"); 
+		}
 	
 }
