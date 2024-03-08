@@ -66,6 +66,12 @@
 			"unit": "date"
 		},
 		{
+			"name": "lastUpdated",
+			"type": "java.util.Date",
+			"description": "Última actualización realizada en el repositorio",
+			"unit": "date"
+		},
+		{
 			"name": "openIssues",
 			"type": "java.lang.Double",
 			"description": "Numero de issues abiertas",
