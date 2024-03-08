@@ -18,7 +18,7 @@ public interface IndicatorStrategy<T> {
 	
 
     /**
-     * Calcula un indicador a partir de las m�tricas proporcionadas.
+     * Calcula un indicador a partir de las métricas proporcionadas.
      * @param <T>
      * @param metrics
      * @throws NotAvailableMetricException
@@ -28,8 +28,8 @@ public interface IndicatorStrategy<T> {
 	
 	
 	/**
-	 * Obtiene las m�tricas necesarias
-	 * @return listado de m�tricas
+	 * Obtiene las métricas necesarias
+	 * @return listado de métricas
 	 */
 	public List<String> requiredMetrics();
 		

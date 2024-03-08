@@ -10,6 +10,6 @@
  * alt="Paquete para la configuración" height="25%" width="50%">
  * 
  * @author Isabel Román
- * @version 0.2
+ * @version V.0.2
  */
 package us.muit.fs.a4i.config;

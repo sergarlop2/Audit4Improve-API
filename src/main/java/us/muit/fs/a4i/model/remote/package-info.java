@@ -4,7 +4,7 @@
  * remotos
  * </p>
  * <p>
- * Construyen informes y m�tricas a partir de la información extraída de
+ * Construyen informes y métricas a partir de la información extraída de
  * servidores remotos
  * </p>
  * <img src=
@@ -12,6 +12,6 @@
  * alt="Paquete para la consulta a remotos" height="25%" width="50%">
  *
  * @author Isabel Román
- * @version 0.0
+ * @version V.0.2
  */
 package us.muit.fs.a4i.model.remote;

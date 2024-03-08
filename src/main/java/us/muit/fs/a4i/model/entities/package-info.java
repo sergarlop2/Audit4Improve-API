@@ -8,7 +8,7 @@
  * alt="Paquete de entidades" height="50%" width="75%">
  *
  * @author Isabel Román
- * @version 0.0
+ * @version V.0.2
  */
 
 package us.muit.fs.a4i.model.entities;

@@ -28,6 +28,9 @@ import us.muit.fs.a4i.model.entities.ReportItem.ReportItemBuilder;
  *
  */
 public class GitHubRepositoryEnquirer extends GitHubEnquirer {
+	/**
+	 * para trazar el código
+	 */
 	private static Logger log = Logger.getLogger(GitHubRepositoryEnquirer.class.getName());
 
 	/**
@@ -54,7 +57,9 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		metricNames.add("ownerCommits");
 		log.info("A�adidas m�tricas al GHRepositoryEnquirer");
 	}
-
+    /**
+     * Devuelve el informe para el repositorio cuyo id se pasa como parámetro
+     */
 	@Override
 	public ReportI buildReport(String repositoryId) {
 		ReportI report = null;
@@ -157,6 +162,9 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 
 	/**
 	 * Permite consultar desde fuera una única métrica del repositorio indicado
+	 * @param metricName el nombre de la métrica
+	 * @param repositoryId el id del repositorio
+	 * @return el item para incluir en el informe del repositorio
 	 */
 
 	@Override
@@ -335,7 +343,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		return metric;
 
 	}
-	
+	/**
+	 * Devuelve el número de suscriptores
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getSubscribers(GHRepository repo) {
 		log.info("Consultando los subscriptores");
 		ReportItemBuilder<Integer> builder=null;
@@ -349,7 +361,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
-	
+	/**
+	 * Devuelve el número de forks
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getForks(GHRepository repo) {
 		log.info("Consultando los forks");
 		ReportItemBuilder<Integer> builder=null;
@@ -363,7 +379,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
-	
+	/**
+	 * Devuelve los usuarios que observan el repositorio
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getWatchers(GHRepository repo) {
 		log.info("Consultando los watchers");
 		ReportItemBuilder<Integer> builder=null;
@@ -377,7 +397,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
-	
+	/**
+	 * Devuelve el número de estrellas
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getStars(GHRepository repo) {
 		log.info("Consultando las starts");
 		ReportItemBuilder<Integer> builder=null;
@@ -392,7 +416,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		return builder.build();
 	}
 	
-	
+	/**
+	 * Devuelve el número de commits que realiza el responsable del repositorio
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getOwnerCommits(GHRepository repo) {
 		log.info("Consultando los commits del responsable del repositorio");
 		ReportItemBuilder<Integer> builder=null;
@@ -409,7 +437,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
-	
+	/**
+	 * Devuelve el número de tickets
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getIssues(GHRepository repo) {
 		log.info("Consultando los issues");
 		ReportItemBuilder<Integer> builder=null;
@@ -423,6 +455,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
+	/**
+	 * Devuelve los issues abiertos en el repositorio que se pasa como parámetro
+	 * @param repo repositorio que se consulta
+	 * @return item para incluir en el informe
+	 */
 	private ReportItem getOpenIssues(GHRepository repo) {
 		log.info("Consultando los issues abiertos");
 		ReportItemBuilder<Integer> builder=null;
@@ -436,6 +473,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
+	/**
+	 * Devuelve los issues cerrados del repositorio
+	 * @param repo repositorio que se consulta
+	 * @return item para incluir en el informe
+	 */
 	private ReportItem getClosedIssues(GHRepository repo) {
 		log.info("Consultando los issues cerrados");
 		ReportItemBuilder<Integer> builder=null;
@@ -449,7 +491,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
-	
+	/**
+	 * Devuelve el número de colaboradores
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getCollaborators(GHRepository repo) {
 		log.info("Consultando los colaboradores");
 		ReportItemBuilder<Integer> builder=null;
@@ -463,6 +509,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}
+	/**
+	 * Devuelve la fecha de creación del repositorio
+	 * @param repo
+	 * @return item para el informe
+	 */
 	private ReportItem getCreation(GHRepository repo) {
 		log.info("Consultando fecha de creación");
 		ReportItemBuilder<Date> builder=null;
@@ -476,7 +527,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}	
-	
+	/**
+	 * Devuelve la fecha del último push en el repositorio que se pase como argumento
+	 * @param repo repositorio que se consulta
+	 * @return item para el informe
+	 */
 	private ReportItem getLastPush(GHRepository repo) {
 		log.info("Consultando el ultimo push");
 		ReportItemBuilder<Date> builder=null;
@@ -490,7 +545,11 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		}		
 		return builder.build();
 	}	
-	
+	/**
+	 * Fecha de la última actualización
+	 * @param repo repositorio que se consulta
+	 * @return item para incluir en el informe del repositorio
+	 */
 	private ReportItem getLastUpdated(GHRepository repo) {
 		log.info("Consultando la ultima actualización");
 		ReportItemBuilder<Date> builder=null;
