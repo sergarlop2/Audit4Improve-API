@@ -31,6 +31,9 @@ jobs:
     needs: Build
     steps:
       - name: Probando el código
-        run: ./gradlew test
+        run: |
+          cd Audit4Improve-API
+          ./gradlew test
+
 
 
