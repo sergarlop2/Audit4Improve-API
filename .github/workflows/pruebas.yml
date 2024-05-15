@@ -31,7 +31,6 @@ jobs:
     needs: Build
     steps:
       - name: Probando el código
-        run: |
-          ./gradlew test
+        run: ./gradlew test
 
 
