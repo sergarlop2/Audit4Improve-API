@@ -32,7 +32,6 @@ jobs:
     steps:
       - name: Probando el código
         run: |
-          cd Audit4Improve-API
           ./gradlew test
 
 
