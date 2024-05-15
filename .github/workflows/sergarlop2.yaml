@@ -1,0 +1,28 @@
+name: sergarlop2
+
+on:
+  issues:
+    types: [opened]  
+  project_card:
+    types: [moved]    
+  workflow_dispatch:
+
+jobs:
+  custom-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Muestra informacion del evento
+        run: |
+          echo "Evento: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" == "issues" ]; then
+            echo "Nuevo Issue:"
+            echo "Titulo: ${{ github.event.issue.title }}"
+            echo "Descripcion: ${{ github.event.issue.body }}"
+          elif [ "${{ github.event_name }}" == "project_card" ]; then
+            echo "Actualizacion en el Project Card:"
+            echo "Columna: ${{ github.event.project_card.column_name }}"
+            echo "ID: ${{ github.event.project_card.id }}"
+            echo "Nota: ${{ github.event.project_card.note }}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "El workflow se ha ejecutado manualmente"
+          fi
