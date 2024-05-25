@@ -67,7 +67,7 @@ class GitHubRepositoryEnquirerTest {
 		ReportItem metrica = null;
 		
 		// Número total de pull requests que habrá en el repositorio
-		int numPullRequests = 5; 
+		int numPullRequests = 61; 
 		
         // Creamos el RemoteEnquirer para el repositorio GitHub
         GitHubRepositoryEnquirer enquirer = new GitHubRepositoryEnquirer();
@@ -97,7 +97,7 @@ class GitHubRepositoryEnquirerTest {
 		ReportItem metrica = null;
 				
 		// Número de pull requests completados que habrá en el repositorio
-		int numCompletedPull = 5; 
+		int numCompletedPull = 51; 
 				
 		// Creamos el RemoteEnquirer para el repositorio GitHub
 		GitHubRepositoryEnquirer enquirer = new GitHubRepositoryEnquirer();

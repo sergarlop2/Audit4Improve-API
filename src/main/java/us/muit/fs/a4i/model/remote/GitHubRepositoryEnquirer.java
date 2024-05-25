@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHOrganization;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositoryStatistics;
 import org.kohsuke.github.GHRepositoryStatistics.CodeFrequency;
@@ -243,6 +244,12 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		case "closedIssues":
 			metric = getClosedIssues(remoteRepo);
 			break;
+		case "pullResquestTotales":
+			metric = getPullRequestTotales(remoteRepo);
+			break;
+		case "pullRequestCompletados":
+			metric = getPullRequestCompletados(remoteRepo);
+			break;	
 		default:
 			throw new MetricException("La métrica " + metricName + " no está definida para un repositorio");
 		}
@@ -565,6 +572,47 @@ public class GitHubRepositoryEnquirer extends GitHubEnquirer {
 		return builder.build();
 	}	
 	
+	private ReportItem getPullRequestCompletados(GHRepository repo){
+		log.info("Consultando los pull requests completados");
+	    ReportItemBuilder<Integer> builder = null;
+	    
+	    int completedPullRequests = 0;
+	    
+	    try {
+
+	    	for (GHPullRequest pullRequest : repo.getPullRequests(GHIssueState.CLOSED)) {
+	    		
+	    		completedPullRequests++;
+	    		
+	    	}
+	    	builder = new ReportItem.ReportItemBuilder<Integer>("pullRequestCompletados", completedPullRequests);
+	    	builder.description("Número de pull requests completados").source("GitHub");
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    return builder.build();
+	}
 	
+	private ReportItem getPullRequestTotales(GHRepository repo){
+		log.info("Consultando los pull requests totales");
+	    ReportItemBuilder<Integer> builder = null;
+	    
+	    int totalPullRequests = 0;
+	    
+	    try {
+
+	    	for (GHPullRequest pullRequest : repo.getPullRequests(GHIssueState.ALL)) {
+	    	
+	    		totalPullRequests++;
+	    		
+	    	}
+	    	builder = new ReportItem.ReportItemBuilder<Integer>("pullRequestTotales", totalPullRequests);
+	    	builder.description("Número de pull requests totales").source("GitHub");
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    return builder.build();
+	}
 	
+		
 }
