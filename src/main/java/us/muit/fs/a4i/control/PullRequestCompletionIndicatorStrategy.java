@@ -19,7 +19,7 @@ public class PullRequestCompletionIndicatorStrategy implements IndicatorStrategy
 	private static Logger log = Logger.getLogger(PullRequestCompletionIndicatorStrategy.class.getName());
 	
 	// Métricas necesarias para calcular el indicador
-	private static final List<String> REQUIRED_METRICS = Arrays.asList("pullResquestTotales", "pullRequestCompletados");
+	private static final List<String> REQUIRED_METRICS = Arrays.asList("pullRequestTotales", "pullRequestCompletados");
 
 	@Override
 	public ReportItemI<Double> calcIndicator(List<ReportItemI<Double>> metricas) throws NotAvailableMetricException {
