@@ -136,6 +136,18 @@
 			"type": "java.lang.Integer",
 			"description": "Número de repositorios con pull requests pendientes",
 			"unit": "repositories"
+		},
+		{
+			"name": "pullRequestCompletados",
+			"type": "java.lang.Integer",
+			"description": "Número de pull requests completados",
+			"unit": "pull requests"
+		},
+		{
+			"name": "pullRequestTotales",
+			"type": "java.lang.Integer",
+			"description": "Número de pull requests totales",
+			"unit": "pull requests"
 		}
 		
 	],
